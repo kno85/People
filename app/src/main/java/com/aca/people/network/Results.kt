@@ -49,7 +49,7 @@ import com.google.gson.annotations.SerializedName
     @SerializedName("country")
     val country: String?,
     @SerializedName("postcode")
-    val postcode: Int?,
+    val postcode: String?,
     @SerializedName("coordinates")
     val coordinates: UserCoordinates?,
     @SerializedName("timezone")
@@ -58,7 +58,7 @@ import com.google.gson.annotations.SerializedName
 
  class UserStreet(
     @SerializedName("number")
-    val number: Int?,
+    val number: String?,
     @SerializedName("name")
     val name: String?
 )
@@ -98,7 +98,7 @@ import com.google.gson.annotations.SerializedName
     @SerializedName("date")
     val date: String?,
     @SerializedName("age")
-    val age: Int?
+    val age: String?
 )
 
  class UserProfilePicture(

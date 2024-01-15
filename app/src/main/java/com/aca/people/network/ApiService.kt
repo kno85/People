@@ -7,8 +7,8 @@ interface ApiService {
     @GET("api/")
     suspend fun getUsers(
         @Query("key") key: String,
-        @Query("results") results: Int,
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("results") results: Int
     ): Results
 
    companion object{

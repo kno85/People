@@ -24,13 +24,13 @@ data class UserLocation(
     val city: String?="",
     val state: String?="",
     val country: String?="",
-    val postcode: Int?=0,
+    val postcode: String?="0",
     val coordinates: UserCoordinates?,
     val timezone: UserTimezone?
 )
 
 data class UserStreet(
-    val number: Int?=0,
+    val number: String?="",
     val name: String?=""
 )
 
@@ -56,7 +56,7 @@ data class UserLogin(
 
 data class UserRegistered(
     val date: String?="",
-    val age: Int?=0
+    val age: String?=""
 )
 
 
