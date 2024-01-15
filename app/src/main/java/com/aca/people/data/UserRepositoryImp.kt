@@ -1,6 +1,5 @@
 package com.aca.people.data
 
-import com.aca.people.domain.User
 import com.aca.people.mapToDomain
 import com.aca.people.network.ApiService
 import com.aca.people.presentation.UiResult

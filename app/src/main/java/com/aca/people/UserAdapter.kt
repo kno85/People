@@ -16,7 +16,6 @@ class UserAdapter(val listener:viewActions) : RecyclerView.Adapter<UserAdapter.U
 
     fun addUsers(newUsers: List<User>) {
         users.addAll(newUsers)
-        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parentView: ViewGroup, viewType: Int): UserViewHolder {

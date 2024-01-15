@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,6 +40,7 @@ class FirstFragment : Fragment(), viewActions {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userViewModel = UserViewModel(UserUseCase(UserRepositoryImpl(apiService)))
+        setupOnBackPressedListerner()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,10 +58,19 @@ class FirstFragment : Fragment(), viewActions {
 
         _binding?.rv?.addItemDecoration(dividerItemDecoration)
         _binding?.rv?.adapter = UserAdapter( this)
-        userViewModel.users.observe(viewLifecycleOwner, Observer { users ->
+        userViewModel.users.observe(viewLifecycleOwner) { users ->
             _binding?.rv?.adapter = userAdapter
             userAdapter.addUsers(users)
-        })
+        }
+        userViewModel.errorMessage.observe(viewLifecycleOwner) {
+            val errorMessage = it
+            Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+        }
+        userViewModel.showExitDialog.observe(viewLifecycleOwner) {
+            if (userViewModel.showExitDialog.value == true) {
+                showExitDialog()
+            }
+        }
     }
     override fun onDestroyView() {
         super.onDestroyView()
@@ -72,4 +84,31 @@ class FirstFragment : Fragment(), viewActions {
 
         findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment, bundle)
     }
+    private fun showExitDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.atencion)
+            .setMessage(R.string.accion_salir)
+            .setNegativeButton(R.string.no) { dialog, which ->
+                userViewModel.userPressBackButton()
+
+            }
+            .setPositiveButton(R.string.si) { dialog, which ->
+                requireActivity().finish()
+            }
+            .setCancelable(false)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .show()
+    }
+    private fun setupOnBackPressedListerner() {
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    userViewModel.userPressBackButton()
+                }
+            }
+        )
+    }
+
 }
