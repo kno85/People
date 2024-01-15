@@ -10,4 +10,8 @@ interface ApiService {
         @Query("results") results: Int,
         @Query("page") page: Int
     ): Results
+
+   companion object{
+   var key: String = "W6I5-ZEYE-IP3V-APR08"
+   }
 }
