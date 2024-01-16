@@ -1,5 +1,6 @@
 package com.aca.people
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,24 +9,24 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.aca.people.data.UserRepositoryImpl
 import com.aca.people.databinding.FragmentFirstBinding
 import com.aca.people.domain.User
-import com.aca.people.domain.UserUseCase
-import com.aca.people.network.apiService
 import com.aca.people.presentation.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class FirstFragment : Fragment(), viewActions {
 
     private var _binding: FragmentFirstBinding? = null
-
-
     private val binding get() = _binding!!
-    private lateinit var userViewModel: UserViewModel
+
+    private val userViewModel : UserViewModel by viewModels()
 
 
     override fun onCreateView(
@@ -39,7 +40,6 @@ class FirstFragment : Fragment(), viewActions {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        userViewModel = UserViewModel(UserUseCase(UserRepositoryImpl(apiService)))
         setupOnBackPressedListerner()
     }
 
@@ -58,6 +58,7 @@ class FirstFragment : Fragment(), viewActions {
 
         _binding?.rv?.addItemDecoration(dividerItemDecoration)
         _binding?.rv?.adapter = UserAdapter( this)
+        userViewModel.submitUserList()
         userViewModel.users.observe(viewLifecycleOwner) { users ->
             _binding?.rv?.adapter = userAdapter
             userAdapter.addUsers(users)
@@ -110,5 +111,4 @@ class FirstFragment : Fragment(), viewActions {
             }
         )
     }
-
 }

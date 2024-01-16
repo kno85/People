@@ -4,20 +4,25 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aca.people.domain.GetUsersUseCase
 import com.aca.people.domain.User
-import com.aca.people.domain.UserUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 // Presentation/UserViewModel.kt
-class UserViewModel(private val userUseCase: UserUseCase) : ViewModel() {
+@HiltViewModel
+class UserViewModel  @Inject constructor(
+    private val userUseCase : GetUsersUseCase
+) : ViewModel() {
+
     private val _users = MutableLiveData<List<User>>()
     val users: LiveData<List<User>> get() = _users
-
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
@@ -26,40 +31,26 @@ class UserViewModel(private val userUseCase: UserUseCase) : ViewModel() {
     val showExitDialog: LiveData<Boolean> = _showExitDialog
 
 
-    private val currentPage: Int = 1
-    private val pageSize: Int = 10
-
-    init {
-        _showExitDialog.value = false
-        submitUserList()
-    }
-
-    private fun submitUserList() {
+     fun submitUserList() {
         viewModelScope.launch {
-            getUsers(page = currentPage, pageSize = pageSize)
+            fetchUserList()
                 .catch { err ->
-                    _errorMessage.value = err.message
+                    _errorMessage.value= err.message
                 }
                 .collect { list ->
-                    if (list.userList != null) {
-                        _users.value = list.userList!!
-                    } else {
-                        _errorMessage.value = list.errorMessage!!
-                    }
+                    _users.value = list
                 }
         }
     }
-
-    fun getUsers(page: Int, pageSize: Int) = flow<UiResult> {
+    private suspend fun fetchUserList() = flow<List<User>> {
         delay(700)
-        userUseCase.getUsers(page, pageSize).let {
+        userUseCase.invoke(1,10).let {
             emit(it)
         }
     }.flowOn(Dispatchers.IO)
 
+
     fun userPressBackButton() {
         _showExitDialog.value = !_showExitDialog.value!!
     }
-
-
 }
