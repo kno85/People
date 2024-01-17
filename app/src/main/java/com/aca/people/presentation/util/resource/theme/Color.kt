@@ -12,7 +12,3 @@ val colorWhite = Color(0xFFFFFFFF)
 val colorWhite100 = Color(0xFFDAB2B2)
 
 val colorGrayDark = Color(0xFF0E141C)
-val colorGrayLight = Color(0xFFE7E7E7)
-
-
-val colorRed = Color(0xFFFF0000)
