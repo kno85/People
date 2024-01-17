@@ -1,7 +1,8 @@
 package com.aca.people.di
 
+import android.provider.SyncStateContract.Constants
 import com.aca.people.network.ApiService
-import com.aca.people.network.BASE_URL
+import com.aca.people.utils.Constants.BASE_URL
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides

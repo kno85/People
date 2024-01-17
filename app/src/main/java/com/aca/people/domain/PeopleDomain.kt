@@ -1,5 +1,7 @@
 package com.aca.people.domain
 
+import retrofit2.http.Query
+
 data class User(
     val gender: String?="",
     val name: UserName?,
@@ -11,7 +13,17 @@ data class User(
     val cell: String?="",
     val picture: UserProfilePicture?,
     val nat: String?=""
-)
+){
+    fun doesMatchSearchQuery(query: String):Boolean {
+        val matchingCombinations = listOf(
+            "${name?.first}${name?.last}",
+            "${name?.first} ${name?.last}",
+            "${email}")
+        return matchingCombinations.any() {
+            it.contains(query, ignoreCase = true)
+        }
+    }
+}
 
 data class UserName(
     val title: String?="",
