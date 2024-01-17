@@ -1,11 +1,11 @@
 package com.aca.people.di
 
-import com.aca.people.repository.paging.UserRepository
-import com.aca.people.repository.paging.UserRepositoryImpl
+import com.aca.people.repository.UserRepository
+import com.aca.people.repository.UserRepositoryImpl
 import com.aca.people.data.remote.UserRemoteDataSource
-import com.aca.people.domain.GetUsersUseCase
 import com.aca.people.network.ApiService
-import com.mmj.movieapp.data.datasource.remote.UserRemoteDataSourceImpl
+import com.aca.people.data.remote.UserRemoteDataSourceImpl
+import com.aca.people.domain.UserUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,7 +38,7 @@ object AppModule {
     @Provides
     fun providesGetUserUseCase(
         userRepository: UserRepository
-    ): GetUsersUseCase {
-        return GetUsersUseCase(userRepository)
+    ): UserUseCase {
+        return UserUseCase(userRepository)
     }
 }

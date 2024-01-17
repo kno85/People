@@ -11,5 +11,7 @@
     <string name="no" translatable="false">No</string>
     <string name="accion_salir" translatable="false">¿Salir People App?</string>
 
-
+    <string name="strRetry" translatable="false">Retry</string>
+    <string name="strFetchingDataFromServer" translatable="false">Fetching data from server</string>
+    <string name="strOriginalLanguage" translatable="false">Original Language</string>
 </resources>

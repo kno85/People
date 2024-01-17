@@ -1,4 +1,4 @@
-package com.aca.people
+package com.aca.people.utils
 
 import com.aca.people.domain.User
 import com.aca.people.domain.UserStreet

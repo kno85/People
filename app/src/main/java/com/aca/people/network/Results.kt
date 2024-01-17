@@ -2,10 +2,6 @@ package com.aca.people.network
 import com.google.gson.annotations.SerializedName
 
 
- class Results(
-    @SerializedName("results")
-    val results: List<User>?
-)
 
  class User(
     @SerializedName("gender")

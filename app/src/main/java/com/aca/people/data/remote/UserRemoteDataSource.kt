@@ -7,8 +7,7 @@ interface UserRemoteDataSource {
 
     suspend fun getUsers(
         apiKey: String,
-        pageNumber: Int,
-        pageSize: Int
-    ): List<User>?
+        pageNumber: Int
+    ): ResponseDto<List<User>?>
 
 }

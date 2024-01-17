@@ -1,5 +1,6 @@
 package com.aca.people.network
 
+import com.aca.people.data.remote.ResponseDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -9,7 +10,6 @@ interface ApiService {
         @Query("key") key: String,
         @Query("page") page: Int,
         @Query("results") results: Int
-    ): Results
+    ): ResponseDto<List<User>?>
 }
-
 
