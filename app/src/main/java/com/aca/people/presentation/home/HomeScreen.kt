@@ -23,8 +23,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -33,7 +31,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.aca.people.R
 import com.aca.people.domain.User
-import  com.aca.people.utils.AppPreferences
+import com.aca.people.presentation.home.component.ItemUser
 import com.aca.people.presentation.main.MainEvent
 import com.aca.people.presentation.main.MainViewModel
 import com.aca.people.presentation.util.ErrorMessage
@@ -41,7 +39,7 @@ import com.aca.people.presentation.util.LoadingNextPageItem
 import com.aca.people.presentation.util.PageLoader
 import com.aca.people.presentation.util.resource.route.AppScreen
 import com.aca.people.presentation.util.resource.theme.AppTheme
-import com.aca.people.presentation.home.component.ItemUser
+import com.aca.people.utils.AppPreferences
 
 @Composable
 fun HomeScreen(
