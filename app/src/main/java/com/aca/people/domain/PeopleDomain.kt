@@ -1,6 +1,6 @@
 package com.aca.people.domain
 
-import retrofit2.http.Query
+import java.io.Serializable
 
 data class User(
     val gender: String?="",
@@ -13,7 +13,7 @@ data class User(
     val cell: String?="",
     val picture: UserProfilePicture?,
     val nat: String?=""
-){
+):Serializable{
     fun doesMatchSearchQuery(query: String):Boolean {
         val matchingCombinations = listOf(
             "${name?.first}${name?.last}",

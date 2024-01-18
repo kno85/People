@@ -117,7 +117,8 @@ fun HomeScreen(
                 ItemUser(
                     itemEntity = userPagingItems[index]!!,
                     onClick = {
-                        navController.navigate(AppScreen.DetailsScreen.route)
+                             navController.currentBackStackEntry?.savedStateHandle?.set("user",  userPagingItems[index]!!)
+                             navController.navigate(AppScreen.DetailsScreen.route)
                     }
                 )
             }

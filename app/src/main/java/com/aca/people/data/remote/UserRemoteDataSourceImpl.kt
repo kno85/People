@@ -2,9 +2,9 @@ package com.aca.people.data.remote
 
 import com.aca.people.network.ApiService
 import com.aca.people.network.User
+import com.aca.people.utils.Constants
 import javax.inject.Inject
 
-var numberOfItems: Int = 10
 class UserRemoteDataSourceImpl @Inject constructor(
     private val api: ApiService
 ) : UserRemoteDataSource {
@@ -13,7 +13,7 @@ class UserRemoteDataSourceImpl @Inject constructor(
         apiKey: String,
         pageNumber: Int
     ): ResponseDto<List<User>?> {
-        return api.getUsers( apiKey,pageNumber, numberOfItems)
+        return api.getUsers( apiKey,pageNumber, Constants.MAX_PAGE_SIZE)
     }
 
 }

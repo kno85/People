@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.aca.people.presentation.detail.DetailView
 import com.aca.people.presentation.home.HomeScreen
 import com.aca.people.presentation.main.MainViewModel
 
@@ -23,7 +24,7 @@ fun NavGraph(mainViewModel: MainViewModel) {
         }
 
         composable(route = AppScreen.DetailsScreen.route) {
-            //DetailsScreen(mainViewModel)
+                DetailView(navController)
         }
     }
 }
