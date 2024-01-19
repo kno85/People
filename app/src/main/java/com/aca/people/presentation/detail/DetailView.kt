@@ -65,11 +65,25 @@ fun DetailView(navController: NavHostController) {
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(text = "Email: ${user?.email}")
+                Text(text =  "Email: ${user?.email}")
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(text = "Gender: ${user?.gender}")
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = "Age: ${user?.registered?.age}")
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(text = "Date of Register: ${user?.registered?.date}")
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(text = "Phone Number: ${user?.phone}")
-                Text(text = "Location: ${user?.location}")
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = "Country: ${user?.location?.country}")
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = "State: ${user?.location?.state}")
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = "City: ${user?.location?.city}")
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = "Postal Code: ${user?.location?.postcode}")
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = "Street: ${user?.location?.street}")
             }
         }
     }
