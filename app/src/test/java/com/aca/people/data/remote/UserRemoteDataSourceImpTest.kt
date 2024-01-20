@@ -13,7 +13,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import retrofit2.Response.success
 
-class ApiClientTest {
+class UserRemoteDataSourceImpTest {
 
     @Mock
     private lateinit var apiService: ApiService
