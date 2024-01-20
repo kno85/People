@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 
 class ResponseDto<T : Any?> {
     @SerializedName("results")
-    val results: T? = null
+    var results: T? = null
 }

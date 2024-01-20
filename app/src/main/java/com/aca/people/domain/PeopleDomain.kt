@@ -29,7 +29,7 @@ data class UserName(
     val title: String?="",
     val first: String?="",
     val last: String?=""
-)
+):Serializable
 
 data class UserLocation(
     val street: UserStreet?,
@@ -39,22 +39,22 @@ data class UserLocation(
     val postcode: String?="0",
     val coordinates: UserCoordinates?,
     val timezone: UserTimezone?
-)
+):Serializable
 
 data class UserStreet(
     val number: String?="",
     val name: String?=""
-)
+):Serializable
 
 data class UserCoordinates(
     val latitude: String?="",
     val longitude: String?=""
-)
+):Serializable
 
 data class UserTimezone(
     val offset: String?="",
     val description: String?=""
-)
+):Serializable
 
 data class UserLogin(
     val uuid: String?="",
@@ -64,16 +64,16 @@ data class UserLogin(
     val md5: String?="",
     val sha1: String?="",
     val sha256: String?=""
-)
+):Serializable
 
 data class UserRegistered(
     val date: String?="",
     val age: String?=""
-)
+):Serializable
 
 
 data class UserProfilePicture(
     val large: String?="",
     val medium: String?="",
     val thumbnail: String?=""
-)
+):Serializable

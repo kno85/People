@@ -1,7 +1,7 @@
 package com.aca.people.di
 
 import com.aca.people.repository.UserRepository
-import com.aca.people.repository.UserRepositoryImpl
+import com.aca.people.repository.UserRepositoryImp
 import com.aca.people.data.remote.UserRemoteDataSource
 import com.aca.people.network.ApiService
 import com.aca.people.data.remote.UserRemoteDataSourceImpl
@@ -31,7 +31,7 @@ object AppModule {
     fun providesUserRepository(
         userRemoteDataSource: UserRemoteDataSource
     ): UserRepository {
-        return UserRepositoryImpl(userRemoteDataSource)
+        return UserRepositoryImp(userRemoteDataSource)
     }
 
     @Singleton

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 // Data/UserRepositoryImpl.kt
-class UserRepositoryImpl @Inject constructor(
+class UserRepositoryImp @Inject constructor(
 
     private val remoteDataSource: UserRemoteDataSource
 ):UserRepository {
