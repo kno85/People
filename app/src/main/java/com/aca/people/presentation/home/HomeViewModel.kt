@@ -23,6 +23,13 @@ class HomeViewModel @Inject constructor(
     private val getUsersUseCase: UserUseCase
 ) : ScopedViewModel() {
 
+    private val _showExitDialog = MutableStateFlow(false)
+    val showExitDialog: StateFlow<Boolean> = _showExitDialog
+
+    fun setShowExitDialog(show: Boolean) {
+        _showExitDialog.value = show
+    }
+
     private val _usersState: MutableStateFlow<PagingData<User>> = MutableStateFlow(value = PagingData.empty())
     val usersState: StateFlow<PagingData<User>>
         get() = searchText
