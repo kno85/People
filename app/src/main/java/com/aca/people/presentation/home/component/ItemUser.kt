@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.aca.people.domain.User
+import org.w3c.dom.Text
 
 @Composable
 fun ItemUser(
@@ -70,25 +72,20 @@ fun ItemUser(
                         .clip(RoundedCornerShape(8.dp))
                         .alpha(transition)
                 )
-                Row(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .align(Alignment.TopEnd),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        Icons.Default.Star,
-                        contentDescription = null,
-                        tint = Color.Yellow
-                    )
-
-                    Text(
-                        text = itemEntity.cell.toString() + "/10",
-                        style = MaterialTheme.typography.titleSmall,
-                        color = Color.Yellow,
-                        modifier = Modifier.padding(start = 5.dp)
-                    )
-                }
+//                Row(
+//                    modifier = Modifier
+//                        .padding(horizontal = 16.dp, vertical = 8.dp)
+//                        .align(Alignment.TopEnd),
+//                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    Icon(
+//                        Icons.Default.FavoriteBorder,
+//                        contentDescription = null,
+//                        tint = Color.Red
+//                    )
+//
+//
+//                }
             }
 
             Text(
@@ -116,6 +113,19 @@ fun ItemUser(
                     overflow = TextOverflow.Ellipsis
                 )
             }
+            Spacer(modifier = Modifier.padding(vertical = 4.dp))
+            itemEntity.phone?.let {
+                Text(
+                    text = it,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 8.dp),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
     }
+
 }
