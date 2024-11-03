@@ -1,5 +1,5 @@
-People App Code Test
-¡Bienvenido a la prueba técnica de People App! En esta prueba, se te pide desarrollar una aplicación que muestre un listado de usuarios y sus detalles utilizando la API de Random User.
+People App 
+Aplicación que muestre un listado de usuarios y sus detalles utilizando la API de Random User.
 
 Requisitos:
 
@@ -18,10 +18,5 @@ Detalles:
 - Uso de Mappers.
 - UnitTest añadidos por cada capa.
 
-  
-![HomeScreen](https://github.com/kno85/People/assets/12805276/7712f5c2-7d4c-4abb-b2e3-c13eb0c27f15)
-
-
-
-
-![DetailView](https://github.com/kno85/People/assets/12805276/9d3bb544-3207-4341-b3b2-56442b2f62e1)
+![screenshot](https://github.com/user-attachments/assets/a4da8a5b-746b-4af1-8c4b-4c10c584d389)
+![screenshot 2](https://github.com/user-attachments/assets/473251fd-7f98-46e5-b3a9-d308b01d4d20)
