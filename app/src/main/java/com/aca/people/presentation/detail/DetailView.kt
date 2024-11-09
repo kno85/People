@@ -29,10 +29,19 @@ fun DetailView(navController: NavHostController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("User Detail") }
+                title = { Text("User Details") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_back_arrow), // Reemplaza con el ícono de flecha
+                            contentDescription = "Back"
+                        )
+                    }
+                },
             )
         }
     ) {
+
         Column(
             modifier = Modifier
                 .padding(it)
