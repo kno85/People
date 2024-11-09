@@ -18,5 +18,6 @@ Detalles:
 - Uso de Mappers.
 - UnitTest añadidos por cada capa.
 
-![screenshot2](https://github.com/user-attachments/assets/6ecb3e62-d706-4b75-b74e-50467471cb89)
-![screenshot1](https://github.com/user-attachments/assets/4053a637-eec5-4f67-8a4c-1865a3876a22)
+
+![Screenshot_20241109_203924](https://github.com/user-attachments/assets/3ff92345-ba7b-4a20-bb6c-1413cf0a63f1)
+![Screenshot_20241109_203945](https://github.com/user-attachments/assets/c4564217-af65-4f07-98d9-ac88e2812d40)
