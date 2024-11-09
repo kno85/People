@@ -1,11 +1,11 @@
 package com.aca.people.presentation.util.resource.route
 
+import DetailView
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.aca.people.presentation.detail.DetailView
-import com.aca.people.presentation.home.HomeScreen
+import com.aca.people.presentation.home.UserListView
 import com.aca.people.presentation.main.MainViewModel
 
 @Composable
@@ -17,7 +17,7 @@ fun NavGraph(mainViewModel: MainViewModel) {
     ) {
 
         composable(route = AppScreen.HomeScreen.route) {
-            HomeScreen(
+            UserListView(
                 mainViewModel = mainViewModel,
                 navController = navController
             )
