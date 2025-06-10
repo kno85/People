@@ -29,5 +29,5 @@ sealed class MainEvent {
 }
 
 data class MainState(
-    val theme: AppTheme = AppPreferences.getTheme(),
+    val theme: AppTheme = AppTheme.Default
 )

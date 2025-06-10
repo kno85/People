@@ -17,16 +17,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.aca.people.domain.User
-import com.aca.people.presentation.main.MainViewModel
 import com.aca.people.presentation.util.ErrorMessage
 import com.aca.people.presentation.util.LoadingNextPageItem
 import com.aca.people.presentation.util.PageLoader
@@ -34,7 +33,6 @@ import com.aca.people.presentation.util.resource.route.AppScreen
 
 @Composable
 fun UserListView(
-    mainViewModel: MainViewModel,
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -112,7 +110,6 @@ fun UserListView(
 @Composable
 fun UserListViewPreview() {
     UserListView(
-        mainViewModel = MainViewModel(),
         navController = rememberNavController()
     )
 }

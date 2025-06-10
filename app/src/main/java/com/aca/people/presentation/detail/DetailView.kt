@@ -18,6 +18,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.aca.people.R
 import com.aca.people.domain.User
 import java.io.Serializable
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -113,7 +114,11 @@ fun DetailView(navController: NavHostController) {
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Gender: ${gender.capitalize()}", style = MaterialTheme.typography.bodyLarge)
+                    Text("Gender: ${gender.replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(
+                            Locale.getDefault()
+                        ) else it.toString()
+                    }}", style = MaterialTheme.typography.bodyLarge)
                 }
             }
 

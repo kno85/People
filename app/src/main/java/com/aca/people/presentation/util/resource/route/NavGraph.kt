@@ -18,7 +18,6 @@ fun NavGraph(mainViewModel: MainViewModel) {
 
         composable(route = AppScreen.HomeScreen.route) {
             UserListView(
-                mainViewModel = mainViewModel,
                 navController = navController
             )
         }

@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.aca.people.domain.User
+import java.util.Locale
 
 @Composable
 fun ItemUser(
@@ -85,7 +86,7 @@ fun ItemUser(
             Column {
                 user.gender?.let { gender ->
                     Text(
-                        text = gender.capitalize(),
+                        text = gender.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier
                             .padding(4.dp)
