@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId "com.aca.people"
-        minSdk project.minSdkVersion
+        minSdk 25
         targetSdk project.targetSdkVersion
         versionCode 1
         versionName "1.0"
