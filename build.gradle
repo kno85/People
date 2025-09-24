@@ -1,56 +1,8 @@
-buildscript {
-    ext {
-        // Kotlin y Compose
-        kotlinCompilerExtensionVersion = '1.5.13'
-
-        // SDK
-        minSdkVersion = 26
-        compileSdkVersion = 34
-        targetSdkVersion = 34
-
-        // Gradle
-        gradleVersion = '8.10.1'
-
-        // AndroidX y Compose
-        ktxVersion = '1.16.0'
-        lifecycleVersion = '2.8.1'
-        composeActivityVersion = '1.10.1'
-        androidXComposeVersion = '2024.05.00' // versión recomendada de BOM (ver más abajo)
-
-        // Test
-        junitVersion = '4.13.2'
-        testExtJunitVersion = '1.1.5'
-        espressoVersion = '3.5.1'
-
-        // Otros
-        constraintVersion = '1.0.1' // probablemente no usas ConstraintLayout en Compose
-        hiltVersion = '2.51.1'
-        hiltAndroidXVersion = '1.2.0'
-        coroutinesVersion = '1.8.1'
-        retrofitVersion = '2.11.0'
-        okhttpVersion = '5.0.0'
-        moshiVersion = '1.15.1'
-        paperVersion = '2.7.2'
-        lottieVersion = '6.4.0'
-        systemUIControllerVersion = '0.34.0'
-        navigationVersion = '2.9.0'
-        navAnimationVersion = '0.34.2-beta'
-        coilVersion = '2.6.0'
-        pagingVersion = '3.3.0'
-
-        kotlinVersion = '1.9.23'
-        kotlinCompilerExtensionVersion = '1.5.13'
-        // ...
-        // androidXComposeVersion = '2024.05.00' // This is your BOM version, good.
-        hiltVersion = '2.51.1' // You have this
-        hiltNavigationComposeVersion = '1.2.0' // ADD THIS or verify existing variable
-
-    }
-
-}
+buildscript {}
 plugins {
-    id 'com.android.application' version '8.0.1' apply false
-    id 'com.android.library' version "$gradleVersion" apply false
-    id 'org.jetbrains.kotlin.android' version "$kotlinVersion" apply false
-    id 'com.google.dagger.hilt.android' version "$hiltVersion" apply false
+    id 'com.android.application' version '8.13.0' apply false
+    id 'com.android.library' version '8.13.0' apply false
+    id 'org.jetbrains.kotlin.android' version "2.2.20" apply false
+    id 'com.google.dagger.hilt.android' version "2.57.1" apply false
+    id 'org.jetbrains.kotlin.plugin.compose' version '2.2.20' apply false
 }

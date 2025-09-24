@@ -4,17 +4,22 @@ plugins {
     // Add these
     id 'kotlin-kapt' // Or id 'com.google.devtools.ksp' if you're using KSP
     id 'com.google.dagger.hilt.android'
-    id("com.google.gms.google-services") version "4.4.2" apply false // Usa la última versión
+    id("com.google.gms.google-services") version "4.4.3" apply false
+    id 'org.jetbrains.kotlin.plugin.compose'// Usa la última versión
 }
 
 android {
     namespace 'com.aca.people'
-    compileSdk 35
-
+    compileSdk 36
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform() // This is key for JUnit 5
+        }
+    }
     defaultConfig {
         applicationId "com.aca.people"
         minSdk 25
-        targetSdk project.targetSdkVersion
+        targetSdk 36
         versionCode 1
         versionName "1.0"
 
@@ -42,9 +47,13 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion project.kotlinCompilerExtensionVersion
+        kotlinCompilerExtensionVersion '1.5.13'
     }
-
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform() // This enables JUnit 5
+        }
+    }
 }
 
 
@@ -55,41 +64,38 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.3.0")) // Usa la última versión de la BOM
 
     // Hilt Dependencies
-    implementation "com.google.dagger:hilt-android:$hiltVersion"
-    implementation 'androidx.compose.foundation:foundation-android:1.8.2' // It seems you have an explicit version here, consider using BOM for Compose
+    implementation "com.google.dagger:hilt-android:2.57.1"
+    kapt "com.google.dagger:hilt-compiler:2.57.1" // Or ksp for KSP
+
+    implementation 'androidx.compose.foundation:foundation-android:1.9.1' // It seems you have an explicit version here, consider using BOM for Compose
     implementation 'androidx.compose.material3:material3-android:1.3.2'
-    implementation 'androidx.navigation:navigation-runtime-android:2.9.0'
-    implementation 'com.google.firebase:firebase-firestore-ktx:25.0.0'// Same as above
-    kapt "com.google.dagger:hilt-compiler:$hiltVersion" // Or ksp for KSP
+    implementation 'androidx.navigation:navigation-runtime-android:2.9.4'
+    implementation 'com.google.firebase:firebase-firestore-ktx:25.1.4'// Same as above
+    kapt "com.google.dagger:hilt-compiler:2.57.1" // Or ksp for KSP
 
     // Gson
-    implementation 'com.google.code.gson:gson:2.11.0' // Or the latest version
+    implementation 'com.google.code.gson:gson:2.13.2' // Or the latest version
 
     // Your Retrofit dependencies (ensure converter-gson is here)
-    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion" // This transitively includes gson
+    implementation "com.squareup.retrofit2:retrofit:3.0.0"
+    implementation "com.squareup.retrofit2:converter-gson:3.0.0" // This transitively includes gson
 
     // OkHttp Logging Interceptor - THIS IS THE FIX
-    implementation "androidx.paging:paging-runtime-ktx:$pagingVersion" // Make sure pagingVersion is defined in your project's build.gradle ext block
+    implementation "androidx.paging:paging-runtime-ktx:3.3.6" // Make sure pagingVersion is defined in your project's build.gradle ext block
 
-    // Moshi
-    implementation "com.squareup.moshi:moshi-kotlin:$moshiVersion"
-    //noinspection KaptUsageInsteadOfKsp
-    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion" // If you are using Moshi's code generation for adapters
-
-    implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
-    implementation "androidx.paging:paging-runtime:$pagingVersion" // You have this one too
-    testImplementation "androidx.paging:paging-common:$pagingVersion"
-    implementation "androidx.paging:paging-compose:3.2.1" // Note: paging-compose is on a different version cycle. 3.2.1 is fine.
+    implementation "androidx.paging:paging-runtime-ktx:3.3.6"
+    implementation "androidx.paging:paging-runtime:3.3.6" // You have this one too
+    testImplementation "androidx.paging:paging-common:3.3.6"
+    implementation "androidx.paging:paging-compose:3.3.6" // Note: paging-compose is on a different version cycle. 3.2.1 is fine.
 
 
-    implementation "io.coil-kt:coil-compose:2.4.0"
+    implementation "io.coil-kt:coil-compose:2.7.0"
 
-    implementation("androidx.navigation:navigation-compose:$navigationVersion")
+    implementation("androidx.navigation:navigation-compose:2.9.4")
 
     // Compose UI Tooling for @Preview
     // If using Compose BOM:
-    implementation(platform("androidx.compose:compose-bom:2024.05.00")) // Make sure this is present if relying on BOM
+    implementation(platform("androidx.compose:compose-bom:2025.09.00")) // Make sure this is present if relying on BOM
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")
     // OR if specifying versions directly (less recommended if BOM is used elsewhere):
@@ -97,14 +103,14 @@ dependencies {
     // debugImplementation("androidx.compose.ui:ui-tooling:1.6.7")    // Example version
 
     // Hilt Integration with Navigation Compose
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0") // Use your defined hiltNavigationComposeVersion or latest
+    implementation("androidx.hilt:hilt-navigation-compose:1.3.0") // Use your defined hiltNavigationComposeVersion or latest
 
     // Your other Hilt dependencies (you already have these)
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
-    kapt("com.google.dagger:hilt-compiler:$hiltVersion") // Or ksp if you're using KSP
+    implementation("com.google.dagger:hilt-android:2.57.1")
+    kapt("com.google.dagger:hilt-compiler:2.57.1") // Or ksp if you're using KSP
 
         // También necesitarás coroutines para operaciones asíncronas
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1") // Usa la última versión estable
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2") // Usa la última versión estable
 
 
     // SDK de cliente de IA Generativa de Google para Firebase (que incluye Vertex AI / Gemini)
@@ -113,20 +119,22 @@ dependencies {
 
     // Ahora puedes declarar firebase-vertexai SIN especificar la versión
     implementation("com.google.firebase:firebase-vertexai:16.5.0") // Reemplaza 1.0.0 con la versión real
-    // Añade la dependencia del SDK de Firebase AI Logic
-// JUnit 5 Jupiter
-// Las versiones que tienes (5.10.x) son bastante recientes y estables. 5.10.3 es la que usaste.
-// La última es ~5.11.0-M1, pero 5.10.3 es buena.
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.13.4"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.13.4"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:5.13.4"
+
 // testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.10.3" // Solo si tienes tests JUnit 4
 
-// Mockito
-// La última estable de mockito-core es ~5.12.0
-// La última estable de mockito-kotlin es ~5.4.0
-    testImplementation "org.mockito:mockito-core:5.19.0"
-    testImplementation "org.mockito.kotlin:mockito-kotlin:6.0.0"
+
+// JUnit 5 Jupiter
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.13.4") // Usa la última versión estable
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.13.4")
+
+    // (Opcional) Para pruebas parametrizadas
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.13.4")
+
+    // (Opcional) Si usas Mockito con JUnit 5
+    testImplementation("org.mockito:mockito-core:5.19.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.19.0") // Para @ExtendWith(MockitoExtension::class)
+    testImplementation("org.mockito.kotlin:mockito-kotlin:6.0.0") // Para Mockito amigable con Kotlin
+
 
 // Turbine
 // La última estable es 1.1.0 (ya tenías 1.2.1, lo cual es raro, 1.1.0 es la que veo como estable)
@@ -137,16 +145,4 @@ dependencies {
 // La última estable es 1.8.1
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2"
     implementation "org.jetbrains.kotlin:kotlin-test:1.9.23"
-
-    // Mockito para pruebas unitarias
-    testImplementation 'org.mockito:mockito-core:5.11.0' // O la última versión estable
-    testImplementation 'org.mockito:mockito-junit-jupiter:5.11.0' // O la misma versión que mockito-core
-
-    // Si usas mockito-kotlin para una mejor sintaxis con Kotlin
-    testImplementation 'org.mockito.kotlin:mockito-kotlin:5.4.0' // O la última versión estable
-
-    // ... otras dependencias de prueba como JUnit Jupiter, Turbine, etc.
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.3' // O la última versión estable
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.3' // O la última versión estable
-
 }

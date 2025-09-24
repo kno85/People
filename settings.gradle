@@ -1,20 +1,52 @@
+// settings.gradle (Groovy)
+
 pluginManagement {
     repositories {
-        google()
-        mavenCentral()
-        maven { url 'https://jitpack.io' }
-        gradlePluginPortal()
+        google()            // For Android Gradle Plugin and other Google-hosted plugins
+        mavenCentral()      // For plugins that might be on Maven Central (less common for direct plugin resolution but good for plugin dependencies)
+        gradlePluginPortal()  // PRIMARY source for most Gradle plugins like Develocity
     }
 }
+
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS) // Good practice
     repositories {
-        google()
-        mavenCentral()
-        maven { url 'https://jitpack.io' }
-        gradlePluginPortal()
+        google()            // For Android libraries and other Google-hosted libraries
+        mavenCentral()      // For general libraries
+        maven { url 'https://jitpack.io' } // For libraries hosted on JitPack
+        // gradlePluginPortal() // Generally not needed here for *library* dependencies, but doesn't hurt.
+        // Its main role is in pluginManagement.
     }
 }
+
 rootProject.name = "People App"
 include ':app'
 
+// Assuming you want to apply Develocity plugin (add this if it's not already elsewhere)
+// and you have the necessary credentials/configuration if using a remote build cache.
+// For Groovy settings.gradle, plugin application is often done in buildscript of root build.gradle
+// or via plugins {} block in root build.gradle if you are not applying it directly in settings.
+// However, if you want to apply it in settings.gradle (less common in older Groovy setups but possible):
+/*
+plugins {
+    id 'com.gradle.develocity' version '3.19.2' apply false
+    // If you were using the older Gradle Enterprise plugin:
+    // id 'com.gradle.enterprise' version '3.17.2' apply false
+}
+*/
+
+// Basic Develocity configuration (can also be in root build.gradle)
+// This configuration block might also reside in the root build.gradle file,
+// especially in traditional Groovy-based Android projects.
+/*
+develocity {
+    buildScan {
+        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+        termsOfServiceAgree = 'yes'
+        // To publish scans publicly to scans.gradle.com:
+        // publishAlways()
+        // Or configure for your remote Develocity/Gradle Enterprise server:
+        // server = 'https://your-develocity-server.com'
+    }
+}
+*/

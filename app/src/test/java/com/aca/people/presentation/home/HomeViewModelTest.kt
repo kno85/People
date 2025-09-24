@@ -1,40 +1,45 @@
 package com.aca.people.presentation.home
 
-import com.aca.people.CoroutinesTestRule
+import com.aca.people.CoroutinesTestExtension
 import com.aca.people.domain.UserUseCase
 import com.aca.people.repository.UserRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
-import org.mockito.MockitoAnnotations
+import org.mockito.junit.jupiter.MockitoExtension
 
-@ExperimentalCoroutinesApi
+@OptIn(ExperimentalCoroutinesApi::class)
+@ExtendWith(MockitoExtension::class, CoroutinesTestExtension::class)
 class HomeViewModelTest {
 
-    @get:Rule
-    val rule = CoroutinesTestRule()
+    private val testDispatcher = StandardTestDispatcher()
+
     @Mock
     private lateinit var userRepository: UserRepository
 
     private lateinit var userUseCase: UserUseCase
-
     private lateinit var homeViewModel: HomeViewModel
 
-    @Before
+    @BeforeEach
     fun setUp() {
-        MockitoAnnotations.initMocks(this)
         userUseCase = UserUseCase(userRepository)
         homeViewModel = HomeViewModel(userUseCase)
     }
 
     @Test
-    fun `onSearchTextChange should update searchText`() = run {
+    fun `onSearchTextChange should update searchText`() = runTest(testDispatcher) {
+        // Act
         homeViewModel.onSearchTextChange("John")
+
+        // advance until coroutines complete when using StandardTestDispatcher
+        testDispatcher.scheduler.advanceUntilIdle()
+
         // Assert
         assertEquals("John", homeViewModel.searchText.value)
     }
-
 }

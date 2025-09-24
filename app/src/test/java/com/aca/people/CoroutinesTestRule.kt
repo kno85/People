@@ -1,25 +1,28 @@
 package com.aca.people
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
-import org.junit.rules.TestWatcher
-import org.junit.runner.Description
+import org.junit.jupiter.api.extension.AfterEachCallback
+import org.junit.jupiter.api.extension.BeforeEachCallback
+import org.junit.jupiter.api.extension.ExtensionContext
 
+/**
+ * JUnit5 extension that sets Dispatchers.Main to a StandardTestDispatcher for deterministic coroutine testing.
+ */
 @ExperimentalCoroutinesApi
-class CoroutinesTestRule : TestWatcher() {
+class CoroutinesTestExtension(
+    val testDispatcher: CoroutineDispatcher = StandardTestDispatcher()
+) : BeforeEachCallback, AfterEachCallback {
 
-    private val testDispatcher = StandardTestDispatcher()
-
-    override fun starting(description: Description) {
-        super.starting(description)
+    override fun beforeEach(context: ExtensionContext?) {
         Dispatchers.setMain(testDispatcher)
     }
 
-    override fun finished(description: Description) {
-        super.finished(description)
+    override fun afterEach(context: ExtensionContext?) {
         Dispatchers.resetMain()
     }
 }

@@ -1,6 +1,5 @@
 package com.aca.people.data.remote
 
-import androidx.compose.ui.semantics.error
 import com.aca.people.network.User
 import com.aca.people.network.UserCoordinates
 import com.aca.people.network.UserLocation
@@ -13,7 +12,6 @@ import com.aca.people.network.UserTimezone
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
-import org.mockito.kotlin.isNotNull
 import retrofit2.Response
 
 // In a test utility class or companion object

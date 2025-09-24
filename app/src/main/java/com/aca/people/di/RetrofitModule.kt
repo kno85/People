@@ -3,7 +3,6 @@ package com.aca.people.di
 import android.provider.SyncStateContract.Constants
 import com.aca.people.network.ApiService
 import com.aca.people.utils.Constants.BASE_URL
-import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,10 +17,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
-
-    @Singleton
-    @Provides
-    fun providesMoshi(): Moshi = Moshi.Builder().build()
 
     @Singleton
     @Provides
