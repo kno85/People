@@ -124,15 +124,15 @@ dependencies {
 
 
 // JUnit 5 Jupiter
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.13.4") // Usa la última versión estable
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.13.4")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.3") // Usa la última versión estable
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.3")
 
     // (Opcional) Para pruebas parametrizadas
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.13.4")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.11.3")
 
     // (Opcional) Si usas Mockito con JUnit 5
-    testImplementation("org.mockito:mockito-core:5.19.0")
-    testImplementation("org.mockito:mockito-junit-jupiter:5.19.0") // Para @ExtendWith(MockitoExtension::class)
+    testImplementation("org.mockito:mockito-core:5.11.3")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.10.0") // Para @ExtendWith(MockitoExtension::class)
     testImplementation("org.mockito.kotlin:mockito-kotlin:6.0.0") // Para Mockito amigable con Kotlin
 
 
@@ -146,3 +146,4 @@ dependencies {
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2"
     implementation "org.jetbrains.kotlin:kotlin-test:1.9.23"
 }
+
