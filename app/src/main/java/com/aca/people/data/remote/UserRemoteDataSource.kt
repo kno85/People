@@ -8,6 +8,6 @@ interface UserRemoteDataSource {
     suspend fun getUsers(
         apiKey: String,
         pageNumber: Int
-    ): ResponseDto<List<User>?>
+    ): retrofit2.Response<ResponseDto<List<User>>>
 
 }

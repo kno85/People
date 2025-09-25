@@ -1,9 +1,8 @@
 package com.aca.people.di
-
+import com.aca.people.network.ApiService
 import com.aca.people.repository.UserRepository
 import com.aca.people.repository.UserRepositoryImp
 import com.aca.people.data.remote.UserRemoteDataSource
-import com.aca.people.network.ApiService
 import com.aca.people.data.remote.UserRemoteDataSourceImpl
 import com.aca.people.domain.UserUseCase
 import dagger.Module

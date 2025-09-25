@@ -1,6 +1,5 @@
 package com.aca.people.di
 
-import android.provider.SyncStateContract.Constants
 import com.aca.people.network.ApiService
 import com.aca.people.utils.Constants.BASE_URL
 import dagger.Module
@@ -47,7 +46,7 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun providesIntegrateApi(retrofit: Retrofit): ApiService =
+    fun providesApiService(retrofit: Retrofit): ApiService =
         retrofit.create(ApiService::class.java)
 
 }

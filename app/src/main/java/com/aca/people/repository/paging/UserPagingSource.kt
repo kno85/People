@@ -20,11 +20,11 @@ class UserPagingSource(
             val users = remoteDataSource.getUsers(
                 apiKey = Constants.API_KEY,
                 pageNumber = currentPage
-            )
+            ).body()?.results
             LoadResult.Page(
-                data = mapToDomain(users.results),
+                data = mapToDomain(users),
                 prevKey = if (currentPage == 1) null else currentPage - 1,
-                nextKey = if (users.results?.isEmpty() == true) null else currentPage + 1
+                nextKey = if (users?.isEmpty() == true) null else currentPage + 1
             )
         } catch (exception: IOException) {
             return LoadResult.Error(exception)

@@ -30,10 +30,9 @@ val mockHttpErrorResponse: Response<List<User>?> = // Or ResponseDto<List<User>?
     createMockHttpErrorResponse(404, errorResponseBody)
 fun createMockResponseDto(
     userList: List<User> = getMockUserList()
-): ResponseDto<List<User>?> {
+): ResponseDto<List<User>> {
     // Crea la instancia de ResponseDto
-    val response = ResponseDto<List<User>?>() // <-- Y aquí
-
+    val response: ResponseDto<List<User>> = ResponseDto()
     // Asigna la lista de usuarios al campo 'results'
     response.results = userList
 
