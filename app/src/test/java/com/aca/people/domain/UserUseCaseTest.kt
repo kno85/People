@@ -36,16 +36,18 @@ class UserUseCaseTest {
     }
 
     @Test
-    fun `execute should return paging data from repository`() = runTest(testDispatcher) {
-        // Arrange
+    fun `Given repository returns paging data, When execute is called, Then it should return the same paging data`() {
+        runTest(testDispatcher) {
+            // Arrange
 
-        val testData = PagingData.from(mapToDomain(getMockUserList()))
-        whenever(userRepository.getUsers()).thenReturn(flowOf(testData))
+            val testData = PagingData.from(mapToDomain(getMockUserList()))
+            whenever(userRepository.getUsers()).thenReturn(flowOf(testData))
 
-        // Act
-        val result: Flow<PagingData<User>> = userUseCase.execute(Unit)
+            // Act
+            val result: Flow<PagingData<User>> = userUseCase.execute(Unit)
 
-        // Assert
-        assertEquals(testData, result.single())
+            // Assert
+            assertEquals(testData, result.single())
+        }
     }
 }
