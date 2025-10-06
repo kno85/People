@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace 'com.aca.people'
-    compileSdk 36
+    compileSdk = 36
     testOptions {
         unitTests.all {
             useJUnitPlatform() // This is key for JUnit 5
@@ -40,8 +40,8 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = '17'
+    kotlin {
+        jvmToolchain(17)
     }
     buildFeatures {
         compose true
@@ -64,14 +64,14 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.3.0")) // Usa la última versión de la BOM
 
     // Hilt Dependencies
-    implementation "com.google.dagger:hilt-android:2.57.1"
-    kapt "com.google.dagger:hilt-compiler:2.57.1" // Or ksp for KSP
+    implementation "com.google.dagger:hilt-android:2.57.2"
+    kapt "com.google.dagger:hilt-compiler:2.57.2" // Or ksp for KSP
 
-    implementation 'androidx.compose.foundation:foundation-android:1.9.1' // It seems you have an explicit version here, consider using BOM for Compose
-    implementation 'androidx.compose.material3:material3-android:1.3.2'
-    implementation 'androidx.navigation:navigation-runtime-android:2.9.4'
+    implementation 'androidx.compose.foundation:foundation-android:1.9.2' // It seems you have an explicit version here, consider using BOM for Compose
+    implementation 'androidx.compose.material3:material3-android:1.4.0'
+    implementation 'androidx.navigation:navigation-runtime-android:2.9.5'
     implementation 'com.google.firebase:firebase-firestore-ktx:25.1.4'// Same as above
-    kapt "com.google.dagger:hilt-compiler:2.57.1" // Or ksp for KSP
+    kapt "com.google.dagger:hilt-compiler:2.57.2" // Or ksp for KSP
 
     // Gson
     implementation 'com.google.code.gson:gson:2.13.2' // Or the latest version
@@ -84,18 +84,18 @@ dependencies {
     implementation "androidx.paging:paging-runtime-ktx:3.3.6" // Make sure pagingVersion is defined in your project's build.gradle ext block
 
     implementation "androidx.paging:paging-runtime-ktx:3.3.6"
-    implementation "androidx.paging:paging-runtime:3.3.6" // You have this one too
-    testImplementation "androidx.paging:paging-common:3.3.6"
+    implementation "androidx.paging:paging-runtime-ktx:3.3.6" // You have this one too
+    testImplementation "androidx.paging:paging-common-ktx:3.3.6"
     implementation "androidx.paging:paging-compose:3.3.6" // Note: paging-compose is on a different version cycle. 3.2.1 is fine.
 
 
     implementation "io.coil-kt:coil-compose:2.7.0"
 
-    implementation("androidx.navigation:navigation-compose:2.9.4")
+    implementation("androidx.navigation:navigation-compose:2.9.5")
 
     // Compose UI Tooling for @Preview
     // If using Compose BOM:
-    implementation(platform("androidx.compose:compose-bom:2025.09.00")) // Make sure this is present if relying on BOM
+    implementation(platform("androidx.compose:compose-bom:2025.09.01")) // Make sure this is present if relying on BOM
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")
     // OR if specifying versions directly (less recommended if BOM is used elsewhere):
@@ -106,8 +106,8 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.3.0") // Use your defined hiltNavigationComposeVersion or latest
 
     // Your other Hilt dependencies (you already have these)
-    implementation("com.google.dagger:hilt-android:2.57.1")
-    kapt("com.google.dagger:hilt-compiler:2.57.1") // Or ksp if you're using KSP
+    implementation("com.google.dagger:hilt-android:2.57.2")
+    kapt("com.google.dagger:hilt-compiler:2.57.2") // Or ksp if you're using KSP
 
         // También necesitarás coroutines para operaciones asíncronas
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2") // Usa la última versión estable
@@ -124,16 +124,16 @@ dependencies {
 
 
 // JUnit 5 Jupiter
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.11.3") // Usa la última versión estable
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.11.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:6.0.0") // Usa la última versión estable
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:6.0.0")
 
     // (Opcional) Para pruebas parametrizadas
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.11.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:6.0.0")
 
     // (Opcional) Si usas Mockito con JUnit 5
-    testImplementation("org.mockito:mockito-core:5.11.3")
-    testImplementation("org.mockito:mockito-junit-jupiter:5.10.0") // Para @ExtendWith(MockitoExtension::class)
-    testImplementation("org.mockito.kotlin:mockito-kotlin:6.0.0") // Para Mockito amigable con Kotlin
+    testImplementation("org.mockito:mockito-core:5.20.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.20.0") // Para @ExtendWith(MockitoExtension::class)
+    testImplementation("org.mockito.kotlin:mockito-kotlin:6.1.0") // Para Mockito amigable con Kotlin
 
 
 // Turbine
@@ -145,14 +145,5 @@ dependencies {
 // La última estable es 1.8.1
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2"
     implementation "org.jetbrains.kotlin:kotlin-test:1.9.23"
-}
-
-kapt {
-    correctErrorTypes = true
-    arguments {
-        // Especifica que estos argumentos son para el procesador de Dagger
-        arg("dagger.fastInit", "fast")
-        arg("dagger.hilt.android.internal.disableAndroidSuperclassValidation", "true")
-    }
 }
 

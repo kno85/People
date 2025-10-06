@@ -4,8 +4,11 @@ import ItemUser
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
@@ -20,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -30,6 +33,7 @@ import com.aca.people.presentation.util.ErrorMessage
 import com.aca.people.presentation.util.LoadingNextPageItem
 import com.aca.people.presentation.util.PageLoader
 import com.aca.people.presentation.util.resource.route.AppScreen
+
 
 @Composable
 fun UserListView(
@@ -43,6 +47,9 @@ fun UserListView(
         topBar = {
             Row(
                 modifier = Modifier
+                    // 1. Aplica el padding de la barra de estado
+                    .windowInsetsPadding(WindowInsets.statusBars)
+                    // 2. El resto de tus modificadores
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .background(MaterialTheme.colorScheme.primary),
