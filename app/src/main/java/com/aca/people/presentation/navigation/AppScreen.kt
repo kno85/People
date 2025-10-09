@@ -1,4 +1,4 @@
-package com.aca.people.presentation.util.resource.route
+package com.aca.people.presentation.navigation
 
 sealed class AppScreen(val route: String) {
     object HomeScreen : AppScreen(ConstantAppScreenName.HOME_SCREEN)

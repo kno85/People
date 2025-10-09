@@ -62,7 +62,7 @@ dependencies {
     // ... other dependencies
     // IMPORTANTE: Declara la Firebase BOM PRIMERO
     implementation(platform("com.google.firebase:firebase-bom:34.3.0")) // Usa la última versión de la BOM
-
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.3") // Versión estable más reciente
     // Hilt Dependencies
     implementation "com.google.dagger:hilt-android:2.57.2"
     kapt "com.google.dagger:hilt-compiler:2.57.2" // Or ksp for KSP
