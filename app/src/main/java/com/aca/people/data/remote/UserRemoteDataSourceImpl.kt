@@ -11,10 +11,10 @@ class UserRemoteDataSourceImpl @Inject constructor(
 ) : UserRemoteDataSource {
 
     override suspend fun getUsers(
-        apiKey: String,
+        seed: String,
         pageNumber: Int
     ): Response<ResponseDto<List<User>>> {
-        return api.getUsers( apiKey,pageNumber, Constants.MAX_PAGE_SIZE)
+        return api.getUsers(seed, pageNumber, Constants.MAX_PAGE_SIZE)
     }
 
 }

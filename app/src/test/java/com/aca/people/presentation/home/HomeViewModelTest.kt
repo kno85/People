@@ -1,6 +1,9 @@
 package com.aca.people.presentation.home
 
+import app.cash.turbine.test
 import com.aca.people.CoroutinesTestExtension
+import com.aca.people.domain.User
+import com.aca.people.domain.UserLogin
 import com.aca.people.domain.UserUseCase
 import com.aca.people.repository.UserRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,13 +36,38 @@ class HomeViewModelTest {
 
     @Test
     fun `onSearchTextChange should update searchText`() = runTest(testDispatcher) {
-        // Act
         homeViewModel.onSearchTextChange("John")
-
-        // advance until coroutines complete when using StandardTestDispatcher
         testDispatcher.scheduler.advanceUntilIdle()
-
-        // Assert
         assertEquals("John", homeViewModel.searchText.value)
+    }
+
+    @Test
+    fun `onUserClicked should emit NavigateToDetail event with UUID`() = runTest(testDispatcher) {
+        val uuid = "1234-5678"
+        val user = User(
+            gender = null,
+            name = null,
+            location = null,
+            email = null,
+            login = UserLogin(uuid = uuid),
+            registered = null,
+            phone = null,
+            cell = null,
+            picture = null,
+            nat = null
+        )
+
+        homeViewModel.uiEvents.test {
+            homeViewModel.onUserClicked(user)
+            assertEquals(HomeUiEvent.NavigateToDetail(uuid), awaitItem())
+        }
+    }
+
+    @Test
+    fun `onExitConfirmed should emit NavigateToExit event`() = runTest(testDispatcher) {
+        homeViewModel.uiEvents.test {
+            homeViewModel.onExitConfirmed()
+            assertEquals(HomeUiEvent.NavigateToExit, awaitItem())
+        }
     }
 }

@@ -16,6 +16,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 // import androidx.navigation.NavHostController // <<--- CAMBIO: Ya no se necesita
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.aca.people.R
 import com.aca.people.domain.User
@@ -24,18 +27,16 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailView(
-    // --- CAMBIO CLAVE: Firma de la función ---
-    // La vista ya no conoce al NavController. Solo recibe los datos que necesita mostrar
-    // y la acción que debe ejecutar cuando el usuario quiere volver atrás.
-    user: User?,
+    viewModel: DetailViewModel = hiltViewModel(),
     onNavigateUp: () -> Unit
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("User Details") },
                 navigationIcon = {
-                    // Ahora usamos la función 'onNavigateUp' que nos pasan desde fuera.
                     IconButton(onClick = onNavigateUp) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_back_arrow),
@@ -45,106 +46,117 @@ fun DetailView(
                 }
             )
         }
-    ) { paddingValues -> // 'it' renombrado a 'paddingValues' para mayor claridad
+    ) { paddingValues -> 
 
-        // Si el usuario es nulo, podríamos mostrar un mensaje de error o un loader.
-        // Por ahora, solo mostramos el contenido si no es nulo.
-        if (user == null) {
-            Box(
-                modifier = Modifier.fillMaxSize().padding(paddingValues),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("User not found or still loading...")
-            }
-            return@Scaffold
-        }
-
-        Column(
-            modifier = Modifier
-                .padding(paddingValues) // Usamos el padding del Scaffold
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp)
+        Box(
+            modifier = Modifier.fillMaxSize().padding(paddingValues),
+            contentAlignment = Alignment.Center
         ) {
-            user.picture?.large?.let { pictureUrl ->
-                val painter = rememberAsyncImagePainter(pictureUrl)
-                Image(
-                    painter = painter,
-                    contentDescription = "Profile picture of ${user.name?.first}",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
-                        .clip(RoundedCornerShape(10.dp))
-                        .padding(top = 16.dp)
-                )
+            when(val state = uiState) {
+                is DetailUiState.Loading -> {
+                    CircularProgressIndicator()
+                }
+                is DetailUiState.NotFound -> {
+                    Text("Usuario no encontrado")
+                }
+                is DetailUiState.Error -> {
+                    Text("Error: ${state.message}", color = MaterialTheme.colorScheme.error)
+                }
+                is DetailUiState.Success -> {
+                    DetailContent(state.user)
+                }
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            user.name?.let { name ->
-                Text(
-                    text = "${name.title.orEmpty()} ${name.first.orEmpty()} ${name.last.orEmpty()}".trim(),
-                    style = MaterialTheme.typography.headlineLarge,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            user.email?.let { email ->
-                InfoRow(
-                    icon = R.drawable.ic_email,
-                    tint = Color.Blue,
-                    text = email
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            user.phone?.let { phone ->
-                InfoRow(
-                    icon = R.drawable.ic_phone,
-                    tint = Color.Green,
-                    text = phone
-                )
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            user.gender?.let { gender ->
-                InfoRow(
-                    icon = R.drawable.ic_person,
-                    tint = Color.Magenta,
-                    text = "Gender: ${gender.replaceFirstChar { it.titlecase(Locale.getDefault()) }}"
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            user.location?.let { location ->
-                Text("Location", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(8.dp))
-
-                InfoRow(
-                    icon = R.drawable.ic_location,
-                    tint = Color.Red,
-                    text = "${location.city.orEmpty()}, ${location.state.orEmpty()}, ${location.country.orEmpty()}".trim()
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                InfoRow(
-                    icon = R.drawable.ic_globe,
-                    tint = Color.Blue,
-                    text = "Coordinates: ${location.coordinates?.latitude ?: "N/A"}, ${location.coordinates?.longitude ?: "N/A"}"
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                InfoRow(
-                    icon = R.drawable.ic_clock,
-                    tint = Color.DarkGray,
-                    text = "Timezone: ${location.timezone?.description.orEmpty()} (${location.timezone?.offset.orEmpty()})".trim()
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
         }
+    }
+}
+
+@Composable
+fun DetailContent(user: User) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 16.dp)
+    ) {
+        user.picture?.large?.let { pictureUrl ->
+            val painter = rememberAsyncImagePainter(pictureUrl)
+            Image(
+                painter = painter,
+                contentDescription = "Profile picture of ${user.name?.first}",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+                    .clip(RoundedCornerShape(10.dp))
+                    .padding(top = 16.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        user.name?.let { name ->
+            Text(
+                text = "${name.title.orEmpty()} ${name.first.orEmpty()} ${name.last.orEmpty()}".trim(),
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        user.email?.let { email ->
+            InfoRow(
+                icon = R.drawable.ic_email,
+                tint = Color.Blue,
+                text = email
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        user.phone?.let { phone ->
+            InfoRow(
+                icon = R.drawable.ic_phone,
+                tint = Color.Green,
+                text = phone
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        user.gender?.let { gender ->
+            InfoRow(
+                icon = R.drawable.ic_person,
+                tint = Color.Magenta,
+                text = "Gender: ${gender.replaceFirstChar { it.titlecase(Locale.getDefault()) }}"
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        user.location?.let { location ->
+            Text("Location", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            InfoRow(
+                icon = R.drawable.ic_location,
+                tint = Color.Red,
+                text = "${location.city.orEmpty()}, ${location.state.orEmpty()}, ${location.country.orEmpty()}".trim()
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            InfoRow(
+                icon = R.drawable.ic_globe,
+                tint = Color.Blue,
+                text = "Coordinates: ${location.coordinates?.latitude ?: "N/A"}, ${location.coordinates?.longitude ?: "N/A"}"
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            InfoRow(
+                icon = R.drawable.ic_clock,
+                tint = Color.DarkGray,
+                text = "Timezone: ${location.timezone?.description.orEmpty()} (${location.timezone?.offset.orEmpty()})".trim()
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 

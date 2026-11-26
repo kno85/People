@@ -44,7 +44,7 @@ class UserUseCaseTest {
             whenever(userRepository.getUsers()).thenReturn(flowOf(testData))
 
             // Act
-            val result: Flow<PagingData<User>> = userUseCase.execute(Unit)
+            val result: Flow<PagingData<User>> = userUseCase()
 
             // Assert
             assertEquals(testData, result.single())

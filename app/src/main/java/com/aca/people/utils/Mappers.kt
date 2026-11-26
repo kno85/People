@@ -53,12 +53,7 @@ private fun mapToDomainRegistered(userRegistered: UserRegistered?): UserRegister
 private fun mapToDomainLogin(userLogin: UserLogin?): com.aca.people.domain.UserLogin {
     return com.aca.people.domain.UserLogin(
         userLogin?.uuid,
-        userLogin?.username,
-        userLogin?.password,
-        userLogin?.salt,
-        userLogin?.md5,
-        userLogin?.sha1,
-        userLogin?.sha256,
+        userLogin?.username
     )
 }
 
