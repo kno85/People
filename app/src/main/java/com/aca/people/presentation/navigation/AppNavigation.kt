@@ -47,7 +47,9 @@ private fun NavGraphBuilder.appGraph(
 
     composable(
         route = AppScreen.DetailsScreen.route,
-        arguments = listOf(navArgument("uuid") { type = NavType.StringType })
+        arguments = listOf(
+            navArgument(ConstantAppScreenName.UUID_ARG) { type = NavType.StringType }
+        )
     ) {
         DetailView(
             onNavigateUp = navController::navigateUp

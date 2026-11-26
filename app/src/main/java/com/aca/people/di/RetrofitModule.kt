@@ -2,6 +2,7 @@ package com.aca.people.di
 
 import com.aca.people.network.ApiService
 import com.aca.people.utils.Constants.BASE_URL
+import com.aca.people.utils.Constants.NETWORK_TIMEOUT_SECONDS
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,8 +21,6 @@ object RetrofitModule {
     @Singleton
     @Provides
     fun providesOkHttpClient(): OkHttpClient {
-
-
         return OkHttpClient.Builder()
             .addInterceptor(
                 Interceptor { chain ->
@@ -29,9 +28,9 @@ object RetrofitModule {
                     return@Interceptor chain.proceed(builder.build())
                 }
             )
-            .readTimeout(60, TimeUnit.SECONDS)
-            .connectTimeout(60, TimeUnit.SECONDS)
-            .writeTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(NETWORK_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .connectTimeout(NETWORK_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .writeTimeout(NETWORK_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .build()
     }
 
@@ -48,5 +47,4 @@ object RetrofitModule {
     @Provides
     fun providesApiService(retrofit: Retrofit): ApiService =
         retrofit.create(ApiService::class.java)
-
 }

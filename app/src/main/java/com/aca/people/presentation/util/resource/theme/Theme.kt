@@ -15,10 +15,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-enum class AppTheme {
-    Light, Dark, Default
-}
-
 private val DarkColorScheme = darkColorScheme(
     primary = colorPrimary,
     onPrimary = colorWhite,

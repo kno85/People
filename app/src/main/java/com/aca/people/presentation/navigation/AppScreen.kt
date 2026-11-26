@@ -2,13 +2,15 @@ package com.aca.people.presentation.navigation
 
 sealed class AppScreen(val route: String) {
     object HomeScreen : AppScreen(ConstantAppScreenName.HOME_SCREEN)
-    object DetailsScreen : AppScreen("${ConstantAppScreenName.DETAILS_SCREEN}/{uuid}") {
+    object DetailsScreen : AppScreen(
+        "${ConstantAppScreenName.DETAILS_SCREEN}/{${ConstantAppScreenName.UUID_ARG}}"
+    ) {
         fun createRoute(uuid: String) = "${ConstantAppScreenName.DETAILS_SCREEN}/$uuid"
     }
 }
 
-
 object ConstantAppScreenName {
     const val HOME_SCREEN = "home_screen"
     const val DETAILS_SCREEN = "details_screen"
+    const val UUID_ARG = "uuid"
 }

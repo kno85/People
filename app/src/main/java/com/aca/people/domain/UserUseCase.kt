@@ -8,7 +8,8 @@ import javax.inject.Inject
 class UserUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) {
-    suspend operator fun invoke(): Flow<PagingData<User>> {
+    operator fun invoke(): Flow<PagingData<User>> {
         return userRepository.getUsers()
     }
 }
+

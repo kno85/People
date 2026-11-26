@@ -1,26 +1,23 @@
 package com.aca.people.repository
 
-import androidx.paging.PagingSource
+import androidx.paging.testing.asSnapshot
 import com.aca.people.data.remote.UserRemoteDataSource
 import com.aca.people.data.remote.createMockResponseDto
 import com.aca.people.data.remote.getMockUserList
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
+import com.aca.people.utils.mapToDomain
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import retrofit2.Response
-import com.aca.people.utils.mapToDomain
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 class UserRepositoryImpTest {
 
@@ -41,29 +38,27 @@ class UserRepositoryImpTest {
     }
 
     @Test
-    fun `getUserByUuid returns user after cache is populated`() = runTest {
-        // Arrange
-        val mockUserList = mapToDomain(getMockUserList())
-        val expectedUser = mockUserList.first()
-        val targetUuid = expectedUser.login?.uuid!!
-        
-        // Use reflection to access the private cache map just for the purpose of simulating the PagingSource callback,
-        // because collecting a Pager flow in a pure JUnit test without Compose/Android lifecycle is complex and flaky.
-        // We will simulate the callback that the repository provides to UserPagingSource.
-        val cacheField = repository.javaClass.getDeclaredField("cachedUsers")
-        cacheField.isAccessible = true
-        @Suppress("UNCHECKED_CAST")
-        val cache = cacheField.get(repository) as java.util.concurrent.ConcurrentHashMap<String, com.aca.people.domain.User>
-        
-        // Simulate what the lambda in repository.getUsers() does when PagingSource loads a page
-        mockUserList.forEach { user ->
-            user.login?.uuid?.let { cache[it] = user }
-        }
+    fun `getUserByUuid returns null when uuid is blank`() = runTest {
+        val result = repository.getUserByUuid("   ")
+        assertNull(result)
+    }
 
-        // Act
-        val result = repository.getUserByUuid(targetUuid)
+    @Test
+    fun `getUserByUuid returns user after getUsers populates cache via PagingSource`() = runTest {
+        val networkUsers = getMockUserList()
+        val expectedUsers = mapToDomain(networkUsers)
+        val expectedUser = expectedUsers.first()
+        val targetUuid = requireNotNull(expectedUser.login?.uuid)
 
-        // Assert
-        assertEquals(expectedUser, result)
+        whenever(remoteDataSource.getUsers(any(), eq(1)))
+            .thenReturn(Response.success(createMockResponseDto(networkUsers)))
+        whenever(remoteDataSource.getUsers(any(), eq(2)))
+            .thenReturn(Response.success(createMockResponseDto(emptyList())))
+
+        val loadedItems = repository.getUsers().asSnapshot()
+        val cachedUser = repository.getUserByUuid(targetUuid)
+
+        assertEquals(expectedUsers, loadedItems)
+        assertEquals(expectedUser, cachedUser)
     }
 }

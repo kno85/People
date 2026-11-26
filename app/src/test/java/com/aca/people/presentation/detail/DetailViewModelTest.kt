@@ -3,8 +3,9 @@ package com.aca.people.presentation.detail
 import androidx.lifecycle.SavedStateHandle
 import com.aca.people.domain.GetUserUseCase
 import com.aca.people.domain.User
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.aca.people.presentation.navigation.ConstantAppScreenName
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -17,7 +18,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -46,15 +46,24 @@ class DetailViewModelTest {
 
         testDispatcher.scheduler.advanceUntilIdle()
 
-        val state = viewModel.uiState.value
-        assertTrue(state is DetailUiState.Error)
+        assertTrue(viewModel.uiState.value is DetailUiState.Error)
+    }
+
+    @Test
+    fun `when uuid is blank in savedStateHandle, state is Error`() = runTest(testDispatcher) {
+        val savedStateHandle = SavedStateHandle(mapOf(ConstantAppScreenName.UUID_ARG to "   "))
+        val viewModel = DetailViewModel(savedStateHandle, getUserUseCase)
+
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(viewModel.uiState.value is DetailUiState.Error)
     }
 
     @Test
     fun `when user is not found, state is NotFound`() = runTest(testDispatcher) {
         val uuid = "123"
-        val savedStateHandle = SavedStateHandle(mapOf("uuid" to uuid))
-        whenever(getUserUseCase.invoke(any())).thenReturn(null)
+        val savedStateHandle = SavedStateHandle(mapOf(ConstantAppScreenName.UUID_ARG to uuid))
+        whenever(getUserUseCase.invoke(uuid)).thenReturn(null)
 
         val viewModel = DetailViewModel(savedStateHandle, getUserUseCase)
         testDispatcher.scheduler.advanceUntilIdle()
@@ -77,8 +86,8 @@ class DetailViewModelTest {
             picture = null,
             nat = null
         )
-        val savedStateHandle = SavedStateHandle(mapOf("uuid" to uuid))
-        whenever(getUserUseCase.invoke(any())).thenReturn(mockUser)
+        val savedStateHandle = SavedStateHandle(mapOf(ConstantAppScreenName.UUID_ARG to uuid))
+        whenever(getUserUseCase.invoke(uuid)).thenReturn(mockUser)
 
         val viewModel = DetailViewModel(savedStateHandle, getUserUseCase)
         testDispatcher.scheduler.advanceUntilIdle()
@@ -86,5 +95,19 @@ class DetailViewModelTest {
         val state = viewModel.uiState.value
         assertTrue(state is DetailUiState.Success)
         assertEquals(mockUser, (state as DetailUiState.Success).user)
+    }
+
+    @Test
+    fun `when getUserUseCase throws exception, state is Error`() = runTest(testDispatcher) {
+        val uuid = "123"
+        val savedStateHandle = SavedStateHandle(mapOf(ConstantAppScreenName.UUID_ARG to uuid))
+        whenever(getUserUseCase.invoke(uuid)).thenThrow(IllegalStateException("Storage failure"))
+
+        val viewModel = DetailViewModel(savedStateHandle, getUserUseCase)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertTrue(state is DetailUiState.Error)
+        assertEquals("Storage failure", (state as DetailUiState.Error).message)
     }
 }

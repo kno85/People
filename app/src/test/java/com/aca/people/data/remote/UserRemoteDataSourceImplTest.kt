@@ -69,5 +69,5 @@ class UserRemoteDataSourceImplTest {
         assertTrue(result.code() == 500)
         assertTrue(result.errorBody() != null)
     }
-
 }
+

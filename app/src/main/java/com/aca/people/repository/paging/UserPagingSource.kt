@@ -3,26 +3,28 @@ package com.aca.people.repository.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.aca.people.data.remote.UserRemoteDataSource
+import com.aca.people.domain.User
 import com.aca.people.utils.Constants
 import com.aca.people.utils.mapToDomain
+import kotlinx.coroutines.CancellationException
 import retrofit2.HttpException
 import java.io.IOException
 
-
 class UserPagingSource(
     private val remoteDataSource: UserRemoteDataSource,
-    private val onPageLoaded: (List<com.aca.people.domain.User>) -> Unit
-) : PagingSource<Int, com.aca.people.domain.User>() {
+    private val seed: String = Constants.SEED,
+    private val onPageLoaded: (List<User>) -> Unit
+) : PagingSource<Int, User>() {
 
-
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, com.aca.people.domain.User> {
+    @Suppress("TooGenericExceptionCaught")
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, User> {
         return try {
             val currentPage = params.key ?: 1
             val response = remoteDataSource.getUsers(
-                seed = Constants.API_KEY,
+                seed = seed,
                 pageNumber = currentPage
             )
-            
+
             if (response.isSuccessful) {
                 val users = response.body()?.results ?: emptyList()
                 val mappedUsers = mapToDomain(users)
@@ -35,15 +37,21 @@ class UserPagingSource(
             } else {
                 LoadResult.Error(HttpException(response))
             }
+        } catch (exception: CancellationException) {
+            throw exception
         } catch (exception: IOException) {
-            return LoadResult.Error(exception)
+            LoadResult.Error(exception)
         } catch (exception: HttpException) {
-            return LoadResult.Error(exception)
+            LoadResult.Error(exception)
+        } catch (exception: Exception) {
+            LoadResult.Error(exception)
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, com.aca.people.domain.User>): Int? {
-        return state.anchorPosition
+    override fun getRefreshKey(state: PagingState<Int, User>): Int? {
+        return state.anchorPosition?.let { anchorPosition ->
+            val anchorPage = state.closestPageToPosition(anchorPosition)
+            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
+        }
     }
-
 }

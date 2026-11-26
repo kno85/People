@@ -35,7 +35,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providesGetUserUseCase(
+    fun providesUserUseCase(
         userRepository: UserRepository
     ): UserUseCase {
         return UserUseCase(userRepository)

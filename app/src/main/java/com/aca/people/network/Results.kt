@@ -1,9 +1,8 @@
 package com.aca.people.network
+
 import com.google.gson.annotations.SerializedName
 
-
-
- class User(
+data class User(
     @SerializedName("gender")
     val gender: String?,
     @SerializedName("name")
@@ -26,7 +25,7 @@ import com.google.gson.annotations.SerializedName
     val nat: String?
 )
 
- class UserName(
+data class UserName(
     @SerializedName("title")
     val title: String?,
     @SerializedName("first")
@@ -35,7 +34,7 @@ import com.google.gson.annotations.SerializedName
     val last: String?
 )
 
- class UserLocation(
+data class UserLocation(
     @SerializedName("street")
     val street: UserStreet?,
     @SerializedName("city")
@@ -52,28 +51,28 @@ import com.google.gson.annotations.SerializedName
     val timezone: UserTimezone?
 )
 
- class UserStreet(
+data class UserStreet(
     @SerializedName("number")
     val number: String?,
     @SerializedName("name")
     val name: String?
 )
 
- class UserCoordinates(
+data class UserCoordinates(
     @SerializedName("latitude")
     val latitude: String?,
     @SerializedName("longitude")
     val longitude: String?
 )
 
- class UserTimezone(
+data class UserTimezone(
     @SerializedName("offset")
     val offset: String?,
     @SerializedName("description")
     val description: String?
 )
 
- class UserLogin(
+data class UserLogin(
     @SerializedName("uuid")
     val uuid: String?,
     @SerializedName("username")
@@ -90,14 +89,14 @@ import com.google.gson.annotations.SerializedName
     val sha256: String?
 )
 
- class UserRegistered(
+data class UserRegistered(
     @SerializedName("date")
     val date: String?,
     @SerializedName("age")
     val age: String?
 )
 
- class UserProfilePicture(
+data class UserProfilePicture(
     @SerializedName("large")
     val large: String?,
     @SerializedName("medium")
@@ -105,3 +104,4 @@ import com.google.gson.annotations.SerializedName
     @SerializedName("thumbnail")
     val thumbnail: String?
 )
+

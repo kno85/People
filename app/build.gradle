@@ -123,4 +123,6 @@ dependencies {
     testImplementation libs.kotlinx.coroutines.test
     testImplementation libs.kotlin.test
     testImplementation libs.androidx.paging.common.ktx
+    testImplementation libs.androidx.paging.testing
 }
+

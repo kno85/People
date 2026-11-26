@@ -1,8 +1,15 @@
-import android.view.View.OnClickListener
+package com.aca.people.presentation.home.component
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -30,7 +37,8 @@ fun ItemUser(
         modifier = Modifier
             .padding(vertical = 8.dp, horizontal = 16.dp)
             .fillMaxWidth()
-            .clickable(onClick = onClick), shape = RoundedCornerShape(10.dp),
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(10.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Row(
@@ -39,74 +47,88 @@ fun ItemUser(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            user.picture?.large?.let { pictureUrl ->
-                val painter = rememberAsyncImagePainter(pictureUrl)
-                Image(
-                    painter = painter,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(70.dp)
-                        .clip(CircleShape)
-                        .background(Color.Gray)
-                )
-            }
-
+            UserAvatar(pictureUrl = user.picture?.large)
             Spacer(modifier = Modifier.width(16.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-                user.name?.let { name ->
-                    Text(
-                        text = "${name.first} ${name.last}",
-                        style = MaterialTheme.typography.headlineSmall,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-
-                Text(
-                    text = user.email ?: "Email no disponible",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-
-                Text(
-                    text = user.phone ?: "Teléfono no disponible",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Column {
-                user.gender?.let { gender ->
-                    Text(
-                        text = gender.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
-                            .clip(RoundedCornerShape(5.dp))
-                    )
-                }
-
-                user.location?.let { location ->
-                    Text(
-                        text = location.city ?: "",
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f))
-                            .clip(RoundedCornerShape(5.dp))
-                    )
-                }
-            }
-
+            UserMainInfo(user = user, modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(8.dp))
+            UserBadges(user = user)
         }
     }
 }
+
+@Composable
+private fun UserAvatar(pictureUrl: String?) {
+    pictureUrl?.let { url ->
+        val painter = rememberAsyncImagePainter(url)
+        Image(
+            painter = painter,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(70.dp)
+                .clip(CircleShape)
+                .background(Color.Gray)
+        )
+    }
+}
+
+@Composable
+private fun UserMainInfo(user: User, modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        user.name?.let { name ->
+            Text(
+                text = "${name.first.orEmpty()} ${name.last.orEmpty()}".trim(),
+                style = MaterialTheme.typography.headlineSmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+
+        Text(
+            text = user.email ?: "Email no disponible",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+
+        Text(
+            text = user.phone ?: "Teléfono no disponible",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+}
+
+@Composable
+private fun UserBadges(user: User) {
+    Column {
+        user.gender?.let { gender ->
+            val formatted = gender.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+            }
+            Text(
+                text = formatted,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier
+                    .padding(4.dp)
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
+                    .clip(RoundedCornerShape(5.dp))
+            )
+        }
+
+        user.location?.let { location ->
+            Text(
+                text = location.city ?: "",
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier
+                    .padding(4.dp)
+                    .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f))
+                    .clip(RoundedCornerShape(5.dp))
+            )
+        }
+    }
+}
+

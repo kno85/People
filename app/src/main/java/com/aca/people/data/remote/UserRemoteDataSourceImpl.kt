@@ -16,5 +16,4 @@ class UserRemoteDataSourceImpl @Inject constructor(
     ): Response<ResponseDto<List<User>>> {
         return api.getUsers(seed, pageNumber, Constants.MAX_PAGE_SIZE)
     }
-
 }

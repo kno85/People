@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aca.people.domain.GetUserUseCase
 import com.aca.people.domain.User
+import com.aca.people.presentation.navigation.ConstantAppScreenName
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,7 +31,7 @@ class DetailViewModel @Inject constructor(
     val uiState: StateFlow<DetailUiState> = _uiState.asStateFlow()
 
     init {
-        val uuid = savedStateHandle.get<String>("uuid")
+        val uuid = savedStateHandle.get<String>(ConstantAppScreenName.UUID_ARG)
         if (uuid.isNullOrBlank()) {
             _uiState.value = DetailUiState.Error("Identificador de usuario no proporcionado o inválido")
         } else {
@@ -37,13 +39,22 @@ class DetailViewModel @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun loadUser(uuid: String) {
         viewModelScope.launch {
-            val user = getUserUseCase(uuid)
-            if (user != null) {
-                _uiState.value = DetailUiState.Success(user)
-            } else {
-                _uiState.value = DetailUiState.NotFound
+            try {
+                val user = getUserUseCase(uuid)
+                _uiState.value = if (user != null) {
+                    DetailUiState.Success(user)
+                } else {
+                    DetailUiState.NotFound
+                }
+            } catch (exception: CancellationException) {
+                throw exception
+            } catch (exception: Exception) {
+                _uiState.value = DetailUiState.Error(
+                    exception.localizedMessage ?: "Error al cargar el usuario"
+                )
             }
         }
     }
