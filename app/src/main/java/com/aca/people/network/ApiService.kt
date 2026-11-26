@@ -8,7 +8,7 @@ import retrofit2.http.Query
 interface ApiService {
     @GET("api/")
     suspend fun getUsers(
-        @Query("key") key: String,
+        @Query("seed") seed: String,
         @Query("page") page: Int,
         @Query("results") results: Int
     ): Response<ResponseDto<List<User>>>

@@ -2,7 +2,9 @@ package com.aca.people.presentation.navigation
 
 sealed class AppScreen(val route: String) {
     object HomeScreen : AppScreen(ConstantAppScreenName.HOME_SCREEN)
-    object DetailsScreen : AppScreen(ConstantAppScreenName.DETAILS_SCREEN)
+    object DetailsScreen : AppScreen("${ConstantAppScreenName.DETAILS_SCREEN}/{email}") {
+        fun createRoute(email: String) = "${ConstantAppScreenName.DETAILS_SCREEN}/$email"
+    }
 }
 
 

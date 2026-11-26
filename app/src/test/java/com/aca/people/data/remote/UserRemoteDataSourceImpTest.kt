@@ -35,14 +35,14 @@ class UserRemoteDataSourceImplTest {
     @Test
     @DisplayName("getUsers should return successful response mapped to ResponseDto")
     fun `getUsers success returns dto`() = runTest(testDispatcher) {
-        val testApiKey = "key"
+        val testSeed = "key"
         val pageNumber = 1
         val mockUserList = getMockUserList()
         val apiResponse = Response.success(createMockResponseDto(mockUserList))
 
-        whenever(apiService.getUsers(key = testApiKey, page = pageNumber, results = Constants.MAX_PAGE_SIZE))
+        whenever(apiService.getUsers(seed = testSeed, page = pageNumber, results = Constants.MAX_PAGE_SIZE))
             .thenReturn(apiResponse)
-        val result = userRemoteDataSource.getUsers(apiKey = testApiKey, pageNumber = pageNumber)
+        val result = userRemoteDataSource.getUsers(seed = testSeed, pageNumber = pageNumber)
 
         assertTrue(result.isSuccessful)
         assertEquals(mockUserList, result.body()?.results)
@@ -50,7 +50,7 @@ class UserRemoteDataSourceImplTest {
     @Test
     @DisplayName("getUsers should return error response on failure")
     fun `getUsers returns error response on failure`() = runTest(testDispatcher) {
-        val testApiKey = "test_key"
+        val testSeed = "test_key"
         val pageNumber = 2
 
         val errorResponse = Response.error<ResponseDto<List<User>>>(
@@ -61,10 +61,10 @@ class UserRemoteDataSourceImplTest {
             )
         )
 
-        whenever(apiService.getUsers(key = testApiKey, page = pageNumber, results = Constants.MAX_PAGE_SIZE))
+        whenever(apiService.getUsers(seed = testSeed, page = pageNumber, results = Constants.MAX_PAGE_SIZE))
             .thenReturn(errorResponse)
 
-        val result = userRemoteDataSource.getUsers(apiKey = testApiKey, pageNumber = pageNumber)
+        val result = userRemoteDataSource.getUsers(seed = testSeed, pageNumber = pageNumber)
 
         assertTrue(result.code() == 500)
         assertTrue(result.errorBody() != null)

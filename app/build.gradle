@@ -1,21 +1,31 @@
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    // Add these
-    id 'kotlin-kapt' // Or id 'com.google.devtools.ksp' if you're using KSP
-    id 'com.google.dagger.hilt.android'
-    id("com.google.gms.google-services") version "4.4.3" apply false
-    id 'org.jetbrains.kotlin.plugin.compose'// Usa la última versión
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.detekt)
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    config.setFrom(file("$rootDir/detekt.yml"))
+}
+
+// Cargar local.properties para leer la API KEY
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
 }
 
 android {
     namespace 'com.aca.people'
-    compileSdk = 36
-    testOptions {
-        unitTests.all {
-            useJUnitPlatform() // This is key for JUnit 5
-        }
-    }
+    compileSdk 36
+
     defaultConfig {
         applicationId "com.aca.people"
         minSdk 25
@@ -27,6 +37,14 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        // Inyectar la API KEY de local.properties
+        buildConfigField "String", "API_KEY", "\"${localProperties.getProperty('API_KEY', '').replace('\"', '')}\""
+    }
+
+    buildFeatures {
+        compose true
+        buildConfig true
     }
 
     buildTypes {
@@ -35,115 +53,74 @@ android {
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+
     kotlin {
         jvmToolchain(17)
     }
-    buildFeatures {
-        compose true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.5.13'
-    }
+
     testOptions {
         unitTests.all {
-            useJUnitPlatform() // This enables JUnit 5
+            useJUnitPlatform()
         }
     }
 }
 
-
-
 dependencies {
-    // ... other dependencies
-    // IMPORTANTE: Declara la Firebase BOM PRIMERO
-    implementation(platform("com.google.firebase:firebase-bom:34.3.0")) // Usa la última versión de la BOM
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.3") // Versión estable más reciente
-    // Hilt Dependencies
-    implementation "com.google.dagger:hilt-android:2.57.2"
-    kapt "com.google.dagger:hilt-compiler:2.57.2" // Or ksp for KSP
+    // AndroidX & Core
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.lifecycle.runtime.ktx
+    implementation libs.androidx.lifecycle.runtime.compose
+    implementation libs.androidx.activity.compose
 
-    implementation 'androidx.compose.foundation:foundation-android:1.9.2' // It seems you have an explicit version here, consider using BOM for Compose
-    implementation 'androidx.compose.material3:material3-android:1.4.0'
-    implementation 'androidx.navigation:navigation-runtime-android:2.9.5'
-    implementation 'com.google.firebase:firebase-firestore-ktx:25.1.4'// Same as above
-    kapt "com.google.dagger:hilt-compiler:2.57.2" // Or ksp for KSP
+    // Compose
+    implementation platform(libs.androidx.compose.bom)
+    implementation libs.androidx.ui
+    implementation libs.androidx.ui.graphics
+    implementation libs.androidx.ui.tooling.preview
+    implementation libs.androidx.material3
+    debugImplementation libs.androidx.ui.tooling
+    debugImplementation libs.androidx.ui.test.manifest
 
-    // Gson
-    implementation 'com.google.code.gson:gson:2.13.2' // Or the latest version
+    // Navigation
+    implementation libs.androidx.navigation.compose
+    implementation libs.androidx.hilt.navigation.compose
 
-    // Your Retrofit dependencies (ensure converter-gson is here)
-    implementation "com.squareup.retrofit2:retrofit:3.0.0"
-    implementation "com.squareup.retrofit2:converter-gson:3.0.0" // This transitively includes gson
+    // Hilt
+    implementation libs.hilt.android
+    kapt libs.hilt.compiler
 
-    // OkHttp Logging Interceptor - THIS IS THE FIX
-    implementation "androidx.paging:paging-runtime-ktx:3.3.6" // Make sure pagingVersion is defined in your project's build.gradle ext block
+    // Retrofit & Networking
+    implementation libs.retrofit
+    implementation libs.retrofit.converter.gson
+    implementation libs.gson
 
-    implementation "androidx.paging:paging-runtime-ktx:3.3.6"
-    implementation "androidx.paging:paging-runtime-ktx:3.3.6" // You have this one too
-    testImplementation "androidx.paging:paging-common-ktx:3.3.6"
-    implementation "androidx.paging:paging-compose:3.3.6" // Note: paging-compose is on a different version cycle. 3.2.1 is fine.
+    // Paging 3
+    implementation libs.androidx.paging.runtime
+    implementation libs.androidx.paging.compose
 
+    // Coil (Image Loading)
+    implementation libs.coil.compose
 
-    implementation "io.coil-kt:coil-compose:2.7.0"
-
-    implementation("androidx.navigation:navigation-compose:2.9.5")
-
-    // Compose UI Tooling for @Preview
-    // If using Compose BOM:
-    implementation(platform("androidx.compose:compose-bom:2025.09.01")) // Make sure this is present if relying on BOM
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    // OR if specifying versions directly (less recommended if BOM is used elsewhere):
-    // implementation("androidx.compose.ui:ui-tooling-preview:1.6.7") // Example version
-    // debugImplementation("androidx.compose.ui:ui-tooling:1.6.7")    // Example version
-
-    // Hilt Integration with Navigation Compose
-    implementation("androidx.hilt:hilt-navigation-compose:1.3.0") // Use your defined hiltNavigationComposeVersion or latest
-
-    // Your other Hilt dependencies (you already have these)
-    implementation("com.google.dagger:hilt-android:2.57.2")
-    kapt("com.google.dagger:hilt-compiler:2.57.2") // Or ksp if you're using KSP
-
-        // También necesitarás coroutines para operaciones asíncronas
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2") // Usa la última versión estable
-
-
-    // SDK de cliente de IA Generativa de Google para Firebase (que incluye Vertex AI / Gemini)
-    // Asegúrate de que tienes la BOM de Firebase para gestionar versiones
-
-
-    // Ahora puedes declarar firebase-vertexai SIN especificar la versión
-    implementation("com.google.firebase:firebase-vertexai:16.5.0") // Reemplaza 1.0.0 con la versión real
-
-// testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.10.3" // Solo si tienes tests JUnit 4
-
-
-// JUnit 5 Jupiter
-    testImplementation("org.junit.jupiter:junit-jupiter-api:6.0.0") // Usa la última versión estable
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:6.0.0")
-
-    // (Opcional) Para pruebas parametrizadas
-    testImplementation("org.junit.jupiter:junit-jupiter-params:6.0.0")
-
-    // (Opcional) Si usas Mockito con JUnit 5
-    testImplementation("org.mockito:mockito-core:5.20.0")
-    testImplementation("org.mockito:mockito-junit-jupiter:5.20.0") // Para @ExtendWith(MockitoExtension::class)
-    testImplementation("org.mockito.kotlin:mockito-kotlin:6.1.0") // Para Mockito amigable con Kotlin
-
-
-// Turbine
-// La última estable es 1.1.0 (ya tenías 1.2.1, lo cual es raro, 1.1.0 es la que veo como estable)
-// Revisando de nuevo, la última es 1.3.0
-    testImplementation "app.cash.turbine:turbine:1.2.1" // Actualizado
-
-// Kotlinx Coroutines Test
-// La última estable es 1.8.1
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2"
-    implementation "org.jetbrains.kotlin:kotlin-test:1.9.23"
+    // Testing
+    testImplementation libs.junit.jupiter.api
+    testImplementation libs.junit.jupiter.params
+    testRuntimeOnly libs.junit.jupiter.engine
+    testImplementation libs.mockito.core
+    testImplementation libs.mockito.junit.jupiter
+    testImplementation libs.mockito.kotlin
+    testImplementation libs.turbine
+    testImplementation libs.kotlinx.coroutines.test
+    testImplementation libs.kotlin.test
+    testImplementation libs.androidx.paging.common.ktx
 }
-

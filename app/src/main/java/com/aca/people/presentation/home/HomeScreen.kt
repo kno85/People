@@ -35,23 +35,23 @@ import com.aca.people.presentation.util.PageLoader
 
 @Composable
 fun UserListView(
-    // CAMBIO 1: La firma de la función ahora es correcta y consistente.
     viewModel: HomeViewModel,
-    onNavigateToDetails: (User) -> Unit,
+    onNavigateToDetails: (String) -> Unit,
     onExitApp: () -> Unit
 ) {
-    // CAMBIO 2: Conectamos la acción de salida con el ViewModel.
-    // Esto "inyecta" la función para salir en el ViewModel.
-    // LaunchedEffect se asegura que esto se haga solo una vez de forma segura.
-    LaunchedEffect(onExitApp) {
-        viewModel.onExitAction = onExitApp
+    LaunchedEffect(Unit) {
+        viewModel.uiEvents.collect { event ->
+            when (event) {
+                is HomeUiEvent.NavigateToExit -> onExitApp()
+                is HomeUiEvent.NavigateToDetail -> onNavigateToDetails(event.uuid)
+            }
+        }
     }
 
     val searchText by viewModel.searchText.collectAsState()
     val showExitDialog by viewModel.showExitDialog.collectAsState()
     val userPagingItems: LazyPagingItems<User> = viewModel.usersState.collectAsLazyPagingItems()
 
-    // Intercepta el evento del botón de retroceso del sistema
     BackHandler {
         viewModel.onBackButtonPressed()
     }
@@ -102,9 +102,7 @@ fun UserListView(
             items(userPagingItems.itemCount) { index ->
                 userPagingItems[index]?.let { user ->
                     ItemUser(user,
-                        onClick = {
-                            onNavigateToDetails(user)
-                        }
+                        onClick = { viewModel.onUserClicked(user) }
                     )
                 }
             }

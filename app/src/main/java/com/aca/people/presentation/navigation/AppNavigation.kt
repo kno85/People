@@ -5,10 +5,11 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.aca.people.domain.User
+import androidx.navigation.navArgument
 import com.aca.people.presentation.detail.DetailView
 import com.aca.people.presentation.home.HomeViewModel
 import com.aca.people.presentation.home.UserListView
@@ -38,18 +39,17 @@ private fun NavGraphBuilder.appGraph(
         UserListView(
             viewModel = homeViewModel,
             onExitApp = onExitApp, // 4. Se la pasamos a la pantalla de la lista
-            onNavigateToDetails = { user ->
-                navController.currentBackStackEntry?.savedStateHandle?.set("user", user)
-                navController.navigate(AppScreen.DetailsScreen.route)
+            onNavigateToDetails = { email ->
+                navController.navigate(AppScreen.DetailsScreen.createRoute(email))
             }
         )
     }
 
-    // La pantalla de detalle no necesita la acción de cierre, así que no se la pasamos.
-    composable(route = AppScreen.DetailsScreen.route) {
-        val user = navController.previousBackStackEntry?.savedStateHandle?.get<User>("user")
+    composable(
+        route = AppScreen.DetailsScreen.route,
+        arguments = listOf(navArgument("email") { type = NavType.StringType })
+    ) {
         DetailView(
-            user = user,
             onNavigateUp = navController::navigateUp
         )
     }

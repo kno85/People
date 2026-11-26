@@ -11,21 +11,30 @@ import java.io.IOException
 
 class UserPagingSource(
     private val remoteDataSource: UserRemoteDataSource,
+    private val onPageLoaded: (List<com.aca.people.domain.User>) -> Unit
 ) : PagingSource<Int, com.aca.people.domain.User>() {
 
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, com.aca.people.domain.User> {
         return try {
             val currentPage = params.key ?: 1
-            val users = remoteDataSource.getUsers(
-                apiKey = Constants.API_KEY,
+            val response = remoteDataSource.getUsers(
+                seed = Constants.API_KEY,
                 pageNumber = currentPage
-            ).body()?.results
-            LoadResult.Page(
-                data = mapToDomain(users),
-                prevKey = if (currentPage == 1) null else currentPage - 1,
-                nextKey = if (users?.isEmpty() == true) null else currentPage + 1
             )
+            
+            if (response.isSuccessful) {
+                val users = response.body()?.results ?: emptyList()
+                val mappedUsers = mapToDomain(users)
+                onPageLoaded(mappedUsers)
+                LoadResult.Page(
+                    data = mappedUsers,
+                    prevKey = if (currentPage == 1) null else currentPage - 1,
+                    nextKey = if (users.isEmpty()) null else currentPage + 1
+                )
+            } else {
+                LoadResult.Error(HttpException(response))
+            }
         } catch (exception: IOException) {
             return LoadResult.Error(exception)
         } catch (exception: HttpException) {
