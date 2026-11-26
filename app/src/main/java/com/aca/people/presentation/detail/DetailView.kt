@@ -1,6 +1,7 @@
 package com.aca.people.presentation.detail
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,22 +16,33 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -39,28 +51,36 @@ import coil.compose.rememberAsyncImagePainter
 import com.aca.people.R
 import com.aca.people.domain.User
 import com.aca.people.domain.UserLocation
+import com.aca.people.domain.model.UserNote
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailView(
     viewModel: DetailViewModel = hiltViewModel(),
     onNavigateUp: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    var showNoteDialog by rememberSaveable { mutableStateOf(false) }
+
+    val successState = uiState as? DetailUiState.Success
+    if (showNoteDialog && successState != null) {
+        NoteEditorDialog(
+            initialContent = successState.note?.content.orEmpty(),
+            isEditing = successState.note != null,
+            onSave = { content ->
+                viewModel.onSaveNote(content)
+                showNoteDialog = false
+            },
+            onDismiss = { showNoteDialog = false }
+        )
+    }
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("User Details") },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateUp) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_back_arrow),
-                            contentDescription = "Back"
-                        )
-                    }
-                }
+            DetailTopAppBar(
+                uiState = uiState,
+                onNavigateUp = onNavigateUp,
+                onToggleFavorite = viewModel::onToggleFavorite
             )
         }
     ) { paddingValues ->
@@ -77,14 +97,70 @@ fun DetailView(
                     text = "Error: ${state.message}",
                     color = MaterialTheme.colorScheme.error
                 )
-                is DetailUiState.Success -> DetailContent(state.user)
+                is DetailUiState.Success -> DetailContent(
+                    user = state.user,
+                    note = state.note,
+                    onEditNote = { showNoteDialog = true },
+                    onDeleteNote = viewModel::onDeleteNote
+                )
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailContent(user: User) {
+private fun DetailTopAppBar(
+    uiState: DetailUiState,
+    onNavigateUp: () -> Unit,
+    onToggleFavorite: () -> Unit
+) {
+    TopAppBar(
+        title = { Text("User Details") },
+        navigationIcon = {
+            IconButton(onClick = onNavigateUp) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_back_arrow),
+                    contentDescription = "Back"
+                )
+            }
+        },
+        actions = {
+            val successState = uiState as? DetailUiState.Success
+            if (successState != null) {
+                IconButton(onClick = onToggleFavorite) {
+                    Icon(
+                        imageVector = if (successState.isFavorite) {
+                            Icons.Filled.Favorite
+                        } else {
+                            Icons.Outlined.FavoriteBorder
+                        },
+                        contentDescription = stringResource(
+                            id = if (successState.isFavorite) {
+                                R.string.cd_remove_favorite
+                            } else {
+                                R.string.cd_add_favorite
+                            }
+                        ),
+                        tint = if (successState.isFavorite) {
+                            MaterialTheme.colorScheme.error
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        }
+                    )
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun DetailContent(
+    user: User,
+    note: UserNote?,
+    onEditNote: () -> Unit,
+    onDeleteNote: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -98,6 +174,65 @@ fun DetailContent(user: User) {
             DetailLocationSection(location = location)
         }
         Spacer(modifier = Modifier.height(16.dp))
+        PersonalNoteSection(
+            note = note,
+            onEditNote = onEditNote,
+            onDeleteNote = onDeleteNote
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+    }
+}
+
+@Composable
+private fun PersonalNoteSection(
+    note: UserNote?,
+    onEditNote: () -> Unit,
+    onDeleteNote: () -> Unit
+) {
+    Text(
+        text = stringResource(id = R.string.note_section_title),
+        style = MaterialTheme.typography.titleMedium,
+        fontWeight = FontWeight.Bold
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            if (note != null) {
+                Text(
+                    text = note.content,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = onDeleteNote) {
+                        Text(
+                            text = stringResource(id = R.string.note_delete_action),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    TextButton(onClick = onEditNote) {
+                        Text(text = stringResource(id = R.string.note_edit_action))
+                    }
+                }
+            } else {
+                Text(
+                    text = stringResource(id = R.string.note_empty_hint),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedButton(onClick = onEditNote) {
+                    Text(text = stringResource(id = R.string.note_add_action))
+                }
+            }
+        }
     }
 }
 

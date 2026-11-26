@@ -14,4 +14,32 @@
     <string name="strRetry" translatable="false">Retry</string>
     <string name="strFetchingDataFromServer" translatable="false">Fetching data from server</string>
     <string name="strOriginalLanguage" translatable="false">Original Language</string>
+
+    <string name="nav_people">People</string>
+    <string name="nav_favorites">Favorites</string>
+    <string name="favorites_title">Favorites</string>
+    <string name="favorites_empty_title">No favorites yet</string>
+    <string name="favorites_empty_subtitle">Mark people as favorites to find them quickly here.</string>
+    <string name="cd_add_favorite">Add to favorites</string>
+    <string name="cd_remove_favorite">Remove from favorites</string>
+    <string name="cd_has_note">Has personal note</string>
+    <string name="note_section_title">Personal note</string>
+    <string name="note_empty_hint">No personal note yet.</string>
+    <string name="note_add_action">Add note</string>
+    <string name="note_edit_action">Edit</string>
+    <string name="note_delete_action">Delete</string>
+    <string name="note_dialog_add_title">Add personal note</string>
+    <string name="note_dialog_edit_title">Edit personal note</string>
+    <string name="note_dialog_placeholder">Write a note about this person...</string>
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="search_placeholder">Search by name, email or phone</string>
+    <string name="cd_clear_search">Clear search</string>
+    <string name="filter_all">All</string>
+    <string name="filter_favorites">Favorites</string>
+    <string name="filter_with_notes">With notes</string>
+    <string name="filter_female">Female</string>
+    <string name="filter_male">Male</string>
+    <string name="empty_filtered_title">No people match your search or filters</string>
+    <string name="empty_filtered_action">Clear filters</string>
 </resources>

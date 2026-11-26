@@ -112,6 +112,9 @@ dependencies {
     // Coil (Image Loading)
     implementation libs.coil.compose
 
+    // DataStore Preferences (Temporary Phase 3 local storage)
+    implementation libs.androidx.datastore.preferences
+
     // Testing
     testImplementation libs.junit.jupiter.api
     testImplementation libs.junit.jupiter.params

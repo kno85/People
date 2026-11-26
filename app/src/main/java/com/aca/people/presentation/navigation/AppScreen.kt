@@ -2,6 +2,7 @@ package com.aca.people.presentation.navigation
 
 sealed class AppScreen(val route: String) {
     object HomeScreen : AppScreen(ConstantAppScreenName.HOME_SCREEN)
+    object FavoritesScreen : AppScreen(ConstantAppScreenName.FAVORITES_SCREEN)
     object DetailsScreen : AppScreen(
         "${ConstantAppScreenName.DETAILS_SCREEN}/{${ConstantAppScreenName.UUID_ARG}}"
     ) {
@@ -11,6 +12,8 @@ sealed class AppScreen(val route: String) {
 
 object ConstantAppScreenName {
     const val HOME_SCREEN = "home_screen"
+    const val FAVORITES_SCREEN = "favorites_screen"
     const val DETAILS_SCREEN = "details_screen"
     const val UUID_ARG = "uuid"
 }
+

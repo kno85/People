@@ -1,4 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">People</string>
+    <string name="nav_people">Personas</string>
+    <string name="nav_favorites">Favoritos</string>
+    <string name="favorites_title">Favoritos</string>
+    <string name="favorites_empty_title">Aún no tienes favoritos</string>
+    <string name="favorites_empty_subtitle">Marca personas como favoritas para encontrarlas rápidamente aquí.</string>
+    <string name="cd_add_favorite">Añadir a favoritos</string>
+    <string name="cd_remove_favorite">Quitar de favoritos</string>
+    <string name="cd_has_note">Tiene nota personal</string>
+    <string name="note_section_title">Nota personal</string>
+    <string name="note_empty_hint">Aún no hay ninguna nota personal.</string>
+    <string name="note_add_action">Añadir nota</string>
+    <string name="note_edit_action">Editar</string>
+    <string name="note_delete_action">Eliminar</string>
+    <string name="note_dialog_add_title">Añadir nota personal</string>
+    <string name="note_dialog_edit_title">Editar nota personal</string>
+    <string name="note_dialog_placeholder">Escribe una nota sobre esta persona...</string>
+    <string name="action_save">Guardar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="search_placeholder">Buscar por nombre, email o teléfono</string>
+    <string name="cd_clear_search">Limpiar búsqueda</string>
+    <string name="filter_all">Todos</string>
+    <string name="filter_favorites">Favoritos</string>
+    <string name="filter_with_notes">Con notas</string>
+    <string name="filter_female">Mujer</string>
+    <string name="filter_male">Hombre</string>
+    <string name="empty_filtered_title">No hay personas que coincidan con tu búsqueda o filtros</string>
+    <string name="empty_filtered_action">Limpiar filtros</string>
 </resources>
